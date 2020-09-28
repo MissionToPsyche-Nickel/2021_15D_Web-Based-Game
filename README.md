@@ -3,6 +3,6 @@ Sophia Shovkovy
 
 Danial Yunus
 
-Assad Yousef
+Assad Yousuf
 
 Viraj Nimmagadda 
