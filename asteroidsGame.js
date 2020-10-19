@@ -9,6 +9,7 @@ showAsteroids();
 
 document.getElementById("myCanvas").style.background = "url('images/Space_Background.png')";
 
+
 document.addEventListener('keydown', handleKeyPress);
 
 function handleKeyPress(event){
@@ -113,10 +114,19 @@ function showAsteroids(){
 
 
 function drawRobot(x,y){
-  const canvas = document.getElementById('myCanvas');
+  const canvas = document.getElementById('myCanvas2');
   var ctx = canvas.getContext('2d'); 
   var robot = document.getElementById("Character");
-  ctx.drawImage(robot, x, y, 50,50);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if(currentPosition == 0){
+    ctx.drawImage(robot, 150, 750, 50,50);
+  }
+  if(currentPosition == 1){
+    ctx.drawImage(robot, 540, 750, 50,50);
+  }
+  if(currentPosition == 2){
+    ctx.drawImage(robot, 925, 750, 50,50);
+  }
 }
 
 
