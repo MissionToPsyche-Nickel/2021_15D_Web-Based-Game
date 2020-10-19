@@ -12,6 +12,12 @@ initializeAsteroids();
 showAsteroids();
 
 document.addEventListener("keydown", handleKeyPress);
+document.addEventListener("keydown", function(e) {
+  //prevent space and arrow keys from scrolling
+  if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+      e.preventDefault();
+  }
+}, false);
 
 function handleKeyPress(event) {
   if (event.keyCode == 37 || event.keyCode == 65) {
@@ -44,23 +50,27 @@ function checkKeyPress() {
     console.log("UNSAFE ASTEROID JUMP!");
   }
   if (lives == 0) {
-    var playAgain = confirm("GAME OVER! Play Again?");
-    if (playAgain) {
-      initializeAsteroids();
-      document.getElementById("score").innerHTML = "SCORE: " + score;
-    } else {
-      document.removeEventListener("keydown", handleKeyPress);
-    }
+    showHearts();
+    setTimeout(function() {
+      if(confirm("GAME OVER! Play Again?")){
+        initializeAsteroids();
+        document.getElementById("score").innerHTML = "SCORE: " + score;
+      }
+      else{
+        document.removeEventListener("keydown", handleKeyPress);
+      }
+    }, 50); //waits 50ms to update heart drawing on canvas before displaying alert
   }
 }
 
 function initializeAsteroids() {
+  score = 0;
+  lives = 3;
+  showHearts();
   asteroids = [];
   for (var i = 0; i < 3; i++) {
     asteroids.push(getAsteroidRow());
   }
-  score = 0;
-  lives = 3;
 }
 
 function getAsteroidRow() {
