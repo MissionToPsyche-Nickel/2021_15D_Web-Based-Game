@@ -1,3 +1,4 @@
+document.getElementById("myCanvas").style.background = "url('images/Space_Background.png')";
 console.log("Starting....");
 var asteroids = [];
 var score = 0;
@@ -7,41 +8,29 @@ var currentPosition = 0;
 initializeAsteroids();
 showAsteroids();
 
-document.getElementById("myCanvas").style.background = "url('images/Space_Background.png')";
-
-
 document.addEventListener('keydown', handleKeyPress);
 
 function handleKeyPress(event){
-  if(event.keyCode == 37) {
-    console.log('Left was pressed');
+  if(event.keyCode == 37 || event.keyCode == 65) {
+    console.log('Left/A was pressed');
     if(currentPosition >= 1) currentPosition = currentPosition - 1;
-    //checkKeyPress();
     drawRobot();
   }
-  else if(event.keyCode == 38) {
-    console.log('Up was pressed');
+  else if(event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
+    console.log('Space/Up/W was pressed');
     checkKeyPress();
     shiftAsteroidsUp();
     showAsteroids();
   }
-  else if(event.keyCode == 39) {
-      console.log('Right was pressed');
+  else if(event.keyCode == 39 || event.keyCode == 68) {
+      console.log('Right/D was pressed');
       if(currentPosition <= 1) currentPosition = currentPosition + 1;
-    //checkKeyPress();
-    drawRobot();
+      drawRobot();
   }
-  /*
-  else if(event.keyCode == 40) {
-    console.log('Down was pressed');
-    currentPosition = 1;
-    checkKeyPress();
-  }*/
-
 }
 
 function checkKeyPress(){
-  if(asteroids[9][currentPosition] == 1){
+  if(asteroids[2][currentPosition] == 1){
     score++;
     document.getElementById("score").innerHTML = "SCORE: " + score;
     console.log("GOOD JUMP!");
@@ -68,7 +57,7 @@ function checkKeyPress(){
 
 function initializeAsteroids(){
   asteroids = []
-  for(var i = 0; i < 10; i++){
+  for(var i = 0; i < 3; i++){
     asteroids.push(getAsteroidRow());
   }
   score = 0;
@@ -86,14 +75,12 @@ function getRandomBadAsteroidColumn() {
 }
 
 
-
 function shiftAsteroidsUp(){
-  for(let i = 9; i >0; i--){
+  for(let i = 2; i >0; i--){
     asteroids[i] = asteroids[i-1];
   }
   asteroids[0] = getAsteroidRow()
 }
-
 
 
 function showAsteroids(){
@@ -102,8 +89,8 @@ function showAsteroids(){
 
   for (let i = 0; i < asteroids.length; i++) {
       for (let j = 0; j < asteroids[i].length; j++) {
-          let x = 150 + j * 384.2;
-          let y = i * 64.86;
+          let x = 300 + j * 200;
+          let y = 20 + i * 160;
           cellColor = '#e74c3c';
           if (asteroids[i][j] === -1){
             var img = document.getElementById("Error Asteroid");
@@ -111,7 +98,7 @@ function showAsteroids(){
           else{
             var img = document.getElementById("Valid Asteroid");
           }
-          ctx.drawImage(img, x, y, 50,50);
+          ctx.drawImage(img, x, y, 100,100);
           if(i == asteroids.length - 1 && j == currentPosition){
             drawRobot(x,y)
           }
@@ -119,39 +106,18 @@ function showAsteroids(){
   }
 }
 
-
-
 function drawRobot(x,y){
   const canvas = document.getElementById('myCanvas2');
   var ctx = canvas.getContext('2d'); 
   var robot = document.getElementById("Character");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if(currentPosition == 0){
-    ctx.drawImage(robot, 150, 750, 50,50);
+    ctx.drawImage(robot, 300, 600, 100,100);
   }
   if(currentPosition == 1){
-    ctx.drawImage(robot, 540, 750, 50,50);
+    ctx.drawImage(robot, 500, 600, 100,100);
   }
   if(currentPosition == 2){
-    ctx.drawImage(robot, 925, 750, 50,50);
+    ctx.drawImage(robot, 700, 600, 100,100);
   }
-}
-
-
-
-
-
-
-//show_image("svg/Character.svg",100,100,1)
-//show_image("svg/Valid_Asteroid.svg",100,100,1)
-//show_image("svg/Error_Asteroid.svg",100,100,1)
-
-function show_image(src, width, height, alt) {
-  var img = document.createElement("img");
-  img.src = src;
-  img.width = width;
-  img.height = height;
-  img.alt = alt;
-  // This next line will just add it to the <body> tag
-  document.body.appendChild(img);
 }
