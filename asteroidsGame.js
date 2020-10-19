@@ -58,6 +58,7 @@ function checkKeyPress(){
 
 
 function initializeAsteroids(){
+  asteroids = []
   for(var i = 0; i < 10; i++){
     asteroids.push(getAsteroidRow());
   }
