@@ -9,26 +9,35 @@ showAsteroids();
 
 document.getElementById("myCanvas").style.background = "url('images/Space_Background.png')";
 
+
 document.addEventListener('keydown', handleKeyPress);
 
 function handleKeyPress(event){
   if(event.keyCode == 37) {
     console.log('Left was pressed');
-    currentPosition = 0;
+    if(currentPosition >= 1) currentPosition = currentPosition - 1;
+    //checkKeyPress();
+    drawRobot();
+  }
+  else if(event.keyCode == 38) {
+    console.log('Up was pressed');
     checkKeyPress();
+    shiftAsteroidsUp();
+    showAsteroids();
   }
   else if(event.keyCode == 39) {
       console.log('Right was pressed');
-      currentPosition = 2;
-      checkKeyPress();
+      if(currentPosition <= 1) currentPosition = currentPosition + 1;
+    //checkKeyPress();
+    drawRobot();
   }
+  /*
   else if(event.keyCode == 40) {
     console.log('Down was pressed');
     currentPosition = 1;
     checkKeyPress();
-  }
-  shiftAsteroidsUp();
-  showAsteroids();
+  }*/
+
 }
 
 function checkKeyPress(){
@@ -102,15 +111,31 @@ function showAsteroids(){
           else{
             var img = document.getElementById("Valid Asteroid");
           }
-          
           ctx.drawImage(img, x, y, 50,50);
+          if(i == asteroids.length - 1 && j == currentPosition){
+            drawRobot(x,y)
+          }
       }
   }
 }
 
 
 
-
+function drawRobot(x,y){
+  const canvas = document.getElementById('myCanvas2');
+  var ctx = canvas.getContext('2d'); 
+  var robot = document.getElementById("Character");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if(currentPosition == 0){
+    ctx.drawImage(robot, 150, 750, 50,50);
+  }
+  if(currentPosition == 1){
+    ctx.drawImage(robot, 540, 750, 50,50);
+  }
+  if(currentPosition == 2){
+    ctx.drawImage(robot, 925, 750, 50,50);
+  }
+}
 
 
 
