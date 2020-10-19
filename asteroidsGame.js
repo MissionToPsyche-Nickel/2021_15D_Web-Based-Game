@@ -1,7 +1,46 @@
 console.log("ashfykjldsajkds");
 
-document.getElementById("myCanvas").style.background =
-  "url('images/Space_Background.png')";
+document.getElementById("myCanvas").style.background = "url('images/Space_Background.png')";
+
+
+  const asteroids = [
+    [1, -1, 1],
+    [1, 1, -1],
+    [1, -1, 1],
+    [1, -1, 1],
+    [-1, 1, 1],
+    [-1, 1, 1],
+    [1, 1, -1],
+    [1, 1, -1],
+    [1, 1, -1],
+    [1, 1, -1],
+];
+const canvas = document.getElementById('myCanvas');
+const cellSide = 20;
+var ctx = canvas.getContext('2d');
+
+
+
+for (let i = 0; i < asteroids.length; i++) {
+    for (let j = 0; j < asteroids[i].length; j++) {
+        let x = j * 384.2;
+        let y = i * 64.86;
+        cellColor = '#e74c3c';
+        if (asteroids[i][j] === -1) cellColor = '#f1c40f';
+        ctx.beginPath();
+        ctx.fillStyle = cellColor;
+        ctx.fillRect(x, y, cellSide, cellSide);  
+    }
+}
+
+
+
+
+
+
+
+
+
 
 //show_image("svg/Character.svg",100,100,1)
 //show_image("svg/Valid_Asteroid.svg",100,100,1)
