@@ -1,35 +1,68 @@
-console.log("ashfykjldsajkds");
+console.log("Starting....");
 var asteroids = [];
 var score = 0;
 var lives = 3;
+var currentPosition = 0;
+
 initializeAsteroids();
+showAsteroids();
+
 document.getElementById("myCanvas").style.background = "url('images/Space_Background.png')";
 
+document.addEventListener('keydown', handleKeyPress);
 
-document.addEventListener('keydown', function(event) {
+function handleKeyPress(event){
   if(event.keyCode == 37) {
     console.log('Left was pressed');
-    shiftAsteroidsUp();
-    showAsteroids();
+    currentPosition = 0;
+    checkKeyPress();
   }
   else if(event.keyCode == 39) {
       console.log('Right was pressed');
-      shiftAsteroidsUp();
-      showAsteroids();
+      currentPosition = 2;
+      checkKeyPress();
   }
   else if(event.keyCode == 40) {
     console.log('Down was pressed');
-    shiftAsteroidsUp();
-    showAsteroids();
+    currentPosition = 1;
+    checkKeyPress();
+  }
+  shiftAsteroidsUp();
+  showAsteroids();
 }
-});
 
+function checkKeyPress(){
+  if(asteroids[9][currentPosition] == 1){
+    score++;
+    document.getElementById("score").innerHTML = "SCORE: " + score;
+    console.log("GOOD JUMP!");
+  }
+  else{
+    lives--;
+    document.getElementById("lives").innerHTML = "REMAINING LIVES: " + lives;
+    console.log("UNSAFE ASTEROID JUMP!");
+  }
+  if(lives == 0){
+    var playAgain = confirm("GAME OVER! Play Again?");
+    if(playAgain){
+      initializeAsteroids();
+      document.getElementById("score").innerHTML = "SCORE: " + score;
+      document.getElementById("lives").innerHTML = "REMAINING LIVES: " + lives;
+    }
+    else{
+      document.getElementById("lives").innerHTML = "REMAINING LIVES: " + lives;
+      document.removeEventListener('keydown', handleKeyPress);
+    }
+  }
+}
 
 
 function initializeAsteroids(){
   for(var i = 0; i < 10; i++){
     asteroids.push(getAsteroidRow());
   }
+  score = 0;
+  lives = 3;
 }
 
 function getAsteroidRow(){
@@ -59,7 +92,7 @@ function showAsteroids(){
 
   for (let i = 0; i < asteroids.length; i++) {
       for (let j = 0; j < asteroids[i].length; j++) {
-          let x = j * 384.2;
+          let x = 150 + j * 384.2;
           let y = i * 64.86;
           cellColor = '#e74c3c';
           if (asteroids[i][j] === -1){
