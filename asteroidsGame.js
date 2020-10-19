@@ -66,11 +66,15 @@ function checkKeyPress() {
 function initializeAsteroids() {
   score = 0;
   lives = 3;
-  showHearts();
   asteroids = [];
   for (var i = 0; i < 3; i++) {
     asteroids.push(getAsteroidRow());
   }
+  const canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  showHearts();
+  showAsteroids();
 }
 
 function getAsteroidRow() {
