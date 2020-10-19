@@ -102,15 +102,22 @@ function showAsteroids(){
           else{
             var img = document.getElementById("Valid Asteroid");
           }
-          
           ctx.drawImage(img, x, y, 50,50);
+          if(i == asteroids.length - 1 && j == currentPosition){
+            drawRobot(x,y)
+          }
       }
   }
 }
 
 
 
-
+function drawRobot(x,y){
+  const canvas = document.getElementById('myCanvas');
+  var ctx = canvas.getContext('2d'); 
+  var robot = document.getElementById("Character");
+  ctx.drawImage(robot, x, y, 50,50);
+}
 
 
 
