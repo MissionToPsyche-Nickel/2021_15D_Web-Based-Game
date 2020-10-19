@@ -100,12 +100,12 @@ function showHearts(){
   var ctx = canvas.getContext("2d");
   var redHeart = document.getElementById("Red Heart");
   var grayHeart = document.getElementById("Gray Heart");
-  ctx.drawImage(grayHeart, 0, 0, 50, 50);
-  ctx.drawImage(grayHeart, 60, 0, 50, 50);
-  ctx.drawImage(grayHeart, 120, 0, 50, 50);
-  if(lives >= 1) ctx.drawImage(redHeart, 0, 0, 50, 50);
-  if(lives >= 2) ctx.drawImage(redHeart, 60, 0, 50, 50);
-  if(lives >= 3) ctx.drawImage(redHeart, 120, 0, 50, 50);
+  ctx.drawImage(grayHeart, 20, 20, 50, 50);
+  ctx.drawImage(grayHeart, 80, 20, 50, 50);
+  ctx.drawImage(grayHeart, 140, 20, 50, 50);
+  if(lives >= 1) ctx.drawImage(redHeart, 20, 20, 50, 50);
+  if(lives >= 2) ctx.drawImage(redHeart, 80, 20, 50, 50);
+  if(lives >= 3) ctx.drawImage(redHeart, 140, 20, 50, 50);
 }
 
 function showAsteroids() {
