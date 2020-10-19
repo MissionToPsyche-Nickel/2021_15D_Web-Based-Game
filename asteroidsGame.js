@@ -1,3 +1,5 @@
+//TODO: Add Welcome/Instructions screen (should help with loading assets)
+
 document.getElementById("myCanvas").style.background =
   "url('images/Space_Background.png')";
 console.log("Starting....");
@@ -39,7 +41,6 @@ function checkKeyPress() {
     console.log("GOOD JUMP!");
   } else {
     lives--;
-    document.getElementById("lives").innerHTML = "REMAINING LIVES: " + lives;
     console.log("UNSAFE ASTEROID JUMP!");
   }
   if (lives == 0) {
@@ -47,9 +48,7 @@ function checkKeyPress() {
     if (playAgain) {
       initializeAsteroids();
       document.getElementById("score").innerHTML = "SCORE: " + score;
-      document.getElementById("lives").innerHTML = "REMAINING LIVES: " + lives;
     } else {
-      document.getElementById("lives").innerHTML = "REMAINING LIVES: " + lives;
       document.removeEventListener("keydown", handleKeyPress);
     }
   }
@@ -67,6 +66,7 @@ function initializeAsteroids() {
 function getAsteroidRow() {
   var asteroidRow = [1, 1, 1];
   asteroidRow[getRandomBadAsteroidColumn()] = -1;
+  if(Math.random() > 0.5) asteroidRow[getRandomBadAsteroidColumn()] = -1;
   return asteroidRow;
 }
 
@@ -81,7 +81,21 @@ function shiftAsteroidsUp() {
   asteroids[0] = getAsteroidRow();
 }
 
+function showHearts(){
+  const canvas = document.getElementById("heartsCanvas");
+  var ctx = canvas.getContext("2d");
+  var redHeart = document.getElementById("Red Heart");
+  var grayHeart = document.getElementById("Gray Heart");
+  ctx.drawImage(grayHeart, 0, 0, 50, 50);
+  ctx.drawImage(grayHeart, 60, 0, 50, 50);
+  ctx.drawImage(grayHeart, 120, 0, 50, 50);
+  if(lives >= 1) ctx.drawImage(redHeart, 0, 0, 50, 50);
+  if(lives >= 2) ctx.drawImage(redHeart, 60, 0, 50, 50);
+  if(lives >= 3) ctx.drawImage(redHeart, 120, 0, 50, 50);
+}
+
 function showAsteroids() {
+  showHearts();
   const canvas = document.getElementById("myCanvas");
   var ctx = canvas.getContext("2d");
 
@@ -109,12 +123,12 @@ function drawRobot(x, y) {
   var robot = document.getElementById("Character");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (currentPosition == 0) {
-    ctx.drawImage(robot, 300, 600, 100, 100);
+    ctx.drawImage(robot, 300, 500, 100, 100);
   }
   if (currentPosition == 1) {
-    ctx.drawImage(robot, 500, 600, 100, 100);
+    ctx.drawImage(robot, 500, 500, 100, 100);
   }
   if (currentPosition == 2) {
-    ctx.drawImage(robot, 700, 600, 100, 100);
+    ctx.drawImage(robot, 700, 500, 100, 100);
   }
 }
