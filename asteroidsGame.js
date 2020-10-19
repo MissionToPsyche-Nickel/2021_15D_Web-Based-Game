@@ -15,21 +15,29 @@ document.addEventListener('keydown', handleKeyPress);
 function handleKeyPress(event){
   if(event.keyCode == 37) {
     console.log('Left was pressed');
-    currentPosition = 0;
+    if(currentPosition >= 1) currentPosition = currentPosition - 1;
+    //checkKeyPress();
+    drawRobot();
+  }
+  else if(event.keyCode == 38) {
+    console.log('Up was pressed');
     checkKeyPress();
+    shiftAsteroidsUp();
+    showAsteroids();
   }
   else if(event.keyCode == 39) {
       console.log('Right was pressed');
-      currentPosition = 2;
-      checkKeyPress();
+      if(currentPosition <= 1) currentPosition = currentPosition + 1;
+    //checkKeyPress();
+    drawRobot();
   }
+  /*
   else if(event.keyCode == 40) {
     console.log('Down was pressed');
     currentPosition = 1;
     checkKeyPress();
-  }
-  shiftAsteroidsUp();
-  showAsteroids();
+  }*/
+
 }
 
 function checkKeyPress(){
