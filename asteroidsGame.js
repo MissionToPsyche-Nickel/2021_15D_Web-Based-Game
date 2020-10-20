@@ -16,7 +16,9 @@ var currentPosition = 0; //the robot's current position, 0 is left col, 1 is mid
 initializeAsteroids();
 
 //Main Display Function
-showAsteroids();
+setTimeout(function() {
+  showAsteroids();
+  }, 50);
 
 //Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
