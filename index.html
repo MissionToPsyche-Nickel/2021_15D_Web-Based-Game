@@ -13,6 +13,7 @@
         margin: auto;
         display: block;
         position: absolute;
+        z-index: 1;
         top: 0;
         bottom: 0;
         left: 0;
@@ -21,10 +22,11 @@
     </style>
   </head>
   <body>
-    <div id="score">SCORE: 0</div>
-    <div>TIME: <span id="time">0</span></div>
+
     <canvas id="spaceCanvas" width="1152.6" height="648.6"></canvas>
     <canvas id="robotCanvas" width="1152.6" height="648.6"></canvas>
+    <div id="score" style="position: absolute; top:150px; left:1320px; z-index: 2; color: white; font-size: 40px;">SCORE: 0</div>
+    <div><span id="time" style="position: absolute; top:200px; left:1320px; z-index: 2; color: white; font-size: 40px;">TIMER: 0</span></div>
     <img
       id="Character"
       width="0"

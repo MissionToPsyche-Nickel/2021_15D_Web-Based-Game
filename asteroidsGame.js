@@ -1,5 +1,5 @@
 //TODO: Add Welcome/Instructions screen (should help with loading assets)
-
+//TODO: Embed Timer in Canvas
 //Set the canvas background to be the Space_Background photo
 document.getElementById("spaceCanvas").style.background =
   "url('images/Space_Background_V2.png ')";
@@ -208,12 +208,9 @@ function showRobot(x, y) {
   }
 }
 
-
-
-
 function tick() {
     timeElapsed++
-    document.getElementById("time").innerHTML = timeElapsed;
+    document.getElementById("time").innerHTML = "TIMER: " + timeElapsed;
 }
 
 function start() {
