@@ -4,26 +4,29 @@
     <meta charset="utf-8" />
     <title>NASA Psyche Mission</title>
     <style>
-      #container{	
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      canvas {
         padding: 0;
         margin: auto;
-        height: 50%;
-        width: 60%;
         display: block;
-        position: relative;
-    } 
-      canvas {
-      position: absolute;
-    }  
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
     </style>
   </head>
   <body>
-    <div id="container">
+
     <canvas id="spaceCanvas" width="1152.6" height="648.6"></canvas>
     <canvas id="robotCanvas" width="1152.6" height="648.6"></canvas>
-    <div id="score" style="left: 890px; color: white; position: absolute; font-size: 40px;">SCORE: 0</div>
-    <div id="time" style="left:  890px; top: 90px; color: white; position: absolute; font-size: 40px;">TIMER:0</div>
-    </div>
+    <div id="score" style="position: absolute; top:200px; left:1230px; z-index: 2; color: white; font-size: 40px;">SCORE: 0</div>
+    <div><span id="time" style="position: absolute; top:300px; left:1230px; z-index: 2; color: white; font-size: 40px;">TIMER: 0</span></div>
     <img
       id="Character"
       width="0"
