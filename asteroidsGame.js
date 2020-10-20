@@ -2,7 +2,7 @@
 
 //Set the canvas background to be the Space_Background photo
 document.getElementById("spaceCanvas").style.background =
-  "url('images/Space_Background.png')";
+  "url('images/Space_Background.png ')";
 
 console.log("Starting...."); //sanity check console log 
 
@@ -27,30 +27,34 @@ function handleKeyPress(event) {
   if (event.keyCode == 37 || event.keyCode == 65) {
     event.preventDefault(); //Disable default keyboard behavior (scrolling)
     console.log("Left/A was pressed"); //Debugging Statement 
-    if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left if it is a valid move
-    showRobot(); //moves the robot left
+    if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left only if it is a valid move
+    showRobot(); //updates robot's position
   } 
-  else if (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
-    event.preventDefault();
-    console.log("Space/Up/W was pressed");
-    checkKeyPress();
-    shiftAsteroidsUp();
-    showAsteroids();
-  } 
+   //If "Right Arrow" or "D" are pressed
   else if (event.keyCode == 39 || event.keyCode == 68) {
-    event.preventDefault();
-    console.log("Right/D was pressed");
-    if (currentPosition <= 1) currentPosition = currentPosition + 1;
-    showRobot();
+    event.preventDefault(); //Disable default keyboard behavior (scrolling)
+    console.log("Right/D was pressed"); //Debugging Statement 
+    if (currentPosition <= 1) currentPosition = currentPosition + 1; //move the robot's current position one column to the right only if it is a valid move
+    showRobot(); //updates robot's position
   }
+
+  //If "Up Arrow" or "W" or "Spacebar" are pressed
+  else if (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
+    event.preventDefault(); //Disable default keyboard behavior (scrolling)
+    console.log("Space/Up/W was pressed"); //Debugging Statement
+    calcJump(); //Calculate Game State after the robot's "jump"
+    shiftAsteroidsDown(); //Shifts asteroids down and adds a new row
+    showAsteroids(); //Displays new game state
+  } 
 }
 
-function checkKeyPress() {
+function calcJump() {
   if (asteroids[2][currentPosition] == 1) {
     score++;
     document.getElementById("score").innerHTML = "SCORE: " + score;
     console.log("GOOD JUMP!");
-  } else {
+  } 
+  else {
     lives--;
     console.log("UNSAFE ASTEROID JUMP!");
   }
@@ -94,7 +98,7 @@ function getRandomBadAsteroidColumn() {
   return Math.floor(Math.random() * Math.floor(3));
 }
 
-function shiftAsteroidsUp() {
+function shiftAsteroidsDown() {
   asteroids[3] = asteroids[2];
   for (let i = 2; i > 0; i--) {
     asteroids[i] = asteroids[i - 1];
