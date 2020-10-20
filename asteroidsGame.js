@@ -70,6 +70,7 @@ function initializeAsteroids() {
   for (var i = 0; i < 3; i++) {
     asteroids.push(getAsteroidRow());
   }
+  asteroids.push([1,1,1]);
   const canvas = document.getElementById("myCanvas");
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -89,6 +90,7 @@ function getRandomBadAsteroidColumn() {
 }
 
 function shiftAsteroidsUp() {
+  asteroids[3] = asteroids[2];
   for (let i = 2; i > 0; i--) {
     asteroids[i] = asteroids[i - 1];
   }
@@ -118,12 +120,24 @@ function showAsteroids() {
       let x = 300 + j * 200;
       let y = 20 + i * 160;
       cellColor = "#e74c3c";
-      if (asteroids[i][j] === -1) {
-        var img = document.getElementById("Error Asteroid");
-      } else {
-        var img = document.getElementById("Valid Asteroid");
+
+      if(i == 3){
+        if (asteroids[i][j] === -1) {
+          var img = document.getElementById("Faded Error Asteroid");
+        } else {
+          var img = document.getElementById("Faded Valid Asteroid");
+        }
+        ctx.drawImage(img, x, y+100, 100, 100);
       }
-      ctx.drawImage(img, x, y, 100, 100);
+      else{
+        if (asteroids[i][j] === -1) {
+          var img = document.getElementById("Error Asteroid");
+        } else {
+          var img = document.getElementById("Valid Asteroid");
+        }
+        ctx.drawImage(img, x, y, 100, 100);
+    }
+      
       if (i == asteroids.length - 1 && j == currentPosition) {
         drawRobot(x, y);
       }
