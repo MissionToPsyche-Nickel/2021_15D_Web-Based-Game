@@ -11,6 +11,8 @@ var asteroids = []; //2D Array of integers (representing asteroids) where "1" is
 var score = 0; //current score
 var lives = 3; //remaining lives
 var currentPosition = 1; //the robot's current position, 0 is left col, 1 is middle col, 2 is right col
+var timeElapsed = 0;
+var timerID = -1;
 
 //Starts the game
 startGame();
@@ -58,6 +60,7 @@ function calcJump() {
 
   //No lives remaining
   if(lives == 0) { 
+    stop(); //stop the timer
     showHearts(); //refresh hearts
     setTimeout(function () {
       if (confirm("GAME OVER! Play Again?")) { //user chose to Play Again
@@ -76,7 +79,8 @@ function startGame() {
   lives = 3;
   currentPosition = 1;
   asteroids = [];
-
+  reset();
+  start();
   //Populates the asteroids 2D array with 3 rows of data
   for (var i = 0; i < 3; i++) {
     asteroids.push(getAsteroidRow());
@@ -202,4 +206,31 @@ function showRobot(x, y) {
     //ctx.drawImage(image to display, x axis positon, y axis position, image width, image height)
     ctx.drawImage(robot, 700, 500, 100, 100);
   }
+}
+
+
+
+
+function tick() {
+    timeElapsed++
+    document.getElementById("time").innerHTML = timeElapsed;
+}
+
+function start() {
+    if(timerID == -1){
+        timerID = setInterval(tick, 1000);
+    }
+}
+
+function stop() {
+    if(timerID != -1){
+        clearInterval(timerID)
+        timerID = -1
+    }
+}
+
+function reset() {
+    stop();
+    timeElapsed = -1;
+    tick()
 }
