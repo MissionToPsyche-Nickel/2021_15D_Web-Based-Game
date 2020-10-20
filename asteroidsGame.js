@@ -1,42 +1,47 @@
 //TODO: Add Welcome/Instructions screen (should help with loading assets)
 
-document.getElementById("myCanvas").style.background =
+//Set the canvas background to be the Space_Background photo
+document.getElementById("spaceCanvas").style.background =
   "url('images/Space_Background.png')";
-console.log("Starting....");
-var asteroids = [];
-var score = 0;
-var lives = 3;
-var currentPosition = 0;
 
+console.log("Starting...."); //sanity check console log 
+
+//GLOBAL VARIABLES:
+var asteroids = []; //2D Array of integers (representing asteroids) where "1" is a Valid_Asteroid (Gray) and "-1" is an Error_Asteroid (Red)
+var score = 0; //current score
+var lives = 3; //remaining lives 
+var currentPosition = 0; //the robot's current position, 0 is left col, 1 is middle col, 2 is right col 
+
+//Populates the asteroids 2D array with data 
 initializeAsteroids();
+
+//Main Display Function
 showAsteroids();
 
+//Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
-document.addEventListener("keydown", function(e) {
-  //prevent space and arrow keys from scrolling
-  if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-      e.preventDefault();
-  }
-}, false);
 
+//handleKeyPress determines what action to take based on user input
 function handleKeyPress(event) {
+  //If "Left Arrow" or "A" are pressed
   if (event.keyCode == 37 || event.keyCode == 65) {
-    console.log("Left/A was pressed");
-    if (currentPosition >= 1) currentPosition = currentPosition - 1;
-    drawRobot();
-  } else if (
-    event.keyCode == 32 ||
-    event.keyCode == 38 ||
-    event.keyCode == 87
-  ) {
+    event.preventDefault(); //Disable default keyboard behavior (scrolling)
+    console.log("Left/A was pressed"); //Debugging Statement 
+    if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left if it is a valid move
+    showRobot(); //moves the robot left
+  } 
+  else if (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
+    event.preventDefault();
     console.log("Space/Up/W was pressed");
     checkKeyPress();
     shiftAsteroidsUp();
     showAsteroids();
-  } else if (event.keyCode == 39 || event.keyCode == 68) {
+  } 
+  else if (event.keyCode == 39 || event.keyCode == 68) {
+    event.preventDefault();
     console.log("Right/D was pressed");
     if (currentPosition <= 1) currentPosition = currentPosition + 1;
-    drawRobot();
+    showRobot();
   }
 }
 
@@ -71,7 +76,7 @@ function initializeAsteroids() {
     asteroids.push(getAsteroidRow());
   }
   asteroids.push([1,1,1]);
-  const canvas = document.getElementById("myCanvas");
+  const canvas = document.getElementById("spaceCanvas");
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   showHearts();
@@ -112,7 +117,7 @@ function showHearts(){
 
 function showAsteroids() {
   showHearts();
-  const canvas = document.getElementById("myCanvas");
+  const canvas = document.getElementById("spaceCanvas");
   var ctx = canvas.getContext("2d");
 
   for (let i = 0; i < asteroids.length; i++) {
@@ -139,14 +144,14 @@ function showAsteroids() {
     }
       
       if (i == asteroids.length - 1 && j == currentPosition) {
-        drawRobot(x, y);
+        showRobot(x, y);
       }
     }
   }
 }
 
-function drawRobot(x, y) {
-  const canvas = document.getElementById("myCanvas2");
+function showRobot(x, y) {
+  const canvas = document.getElementById("robotCanvas");
   var ctx = canvas.getContext("2d");
   var robot = document.getElementById("Character");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
