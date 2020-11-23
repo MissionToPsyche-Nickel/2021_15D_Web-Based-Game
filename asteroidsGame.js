@@ -2,7 +2,7 @@
 //TODO: Embed Timer in Canvas
 //Set the canvas background to be the Space_Background photo
 document.getElementById("spaceCanvas").style.background =
-  "url('images/Space_Background_V3.png ')";
+  "url('images/Space_Background.png ')";
 
 console.log("Starting...."); //sanity check console log
 
