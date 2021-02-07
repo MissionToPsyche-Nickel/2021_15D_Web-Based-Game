@@ -9,7 +9,7 @@
         margin: 0;
         position: absolute;
       }
-      /* canvas {
+       /* canvas {
         padding: 0;
         margin: auto;
         display: block;
@@ -19,12 +19,26 @@
         bottom: 0;
         left: 0;
         right: 0;
-      } */
+      }  */
     </style>
   </head>
   <body>
     <canvas id="spaceCanvas" width="1152.6" height="648.6"></canvas>
     <canvas id="robotCanvas" width="1152.6" height="648.6"></canvas>
+    <div
+    id="questions"
+    style="
+      position: absolute;
+      z-index: 2;
+      color: black;
+      font-size: 30px;
+      left: 200px;
+      top: 100px;
+      width: 500px
+    "
+  >
+    
+  </div>
     <div
       id="score"
       style="
@@ -33,6 +47,7 @@
         z-index: 2;
         color: white;
         font-size: 40px;
+        width: 200px;
       "
     >
       SCORE: 0
@@ -42,12 +57,12 @@
         id="time"
         style="
           position: absolute;
-          
           top: 100px;
           left: 900px;
           z-index: 2;
           color: white;
           font-size: 40px;
+          width: 200px;
         "
         >TIMER: 0</span
       >
@@ -86,6 +101,7 @@
       height="0"
       src="images/Gray_Heart.png"
       alt="gray heart"
+      
     />
     <img
       id="Faded Error Asteroid"

@@ -1,8 +1,7 @@
 //TODO: Add Welcome/Instructions screen (should help with loading assets)
 //TODO: Embed Timer in Canvas
 //Set the canvas background to be the Space_Background photo
-document.getElementById("spaceCanvas").style.background =
-  "url('images/Space_Background.png ')";
+
 
 console.log("Starting...."); //sanity check console log
 
@@ -11,8 +10,17 @@ var asteroids = []; //2D Array of integers (representing asteroids) where "1" is
 var score = 0; //current score
 var lives = 3; //remaining lives
 var currentPosition = 1; //the robot's current position, 0 is left col, 1 is middle col, 2 is right col
+var correctAnswerPos = -1;
+var correctAnswerStr = ""
 var timeElapsed = 0;
 var timerID = -1;
+var questionMode = false;
+var mySound;
+var answered = false;
+mySound = new sound("sound/Robot.m4a");
+
+var questionsDict = generateQuestionDict();
+
 
 //Starts the game
 startGame();
@@ -23,29 +31,67 @@ document.addEventListener("keydown", handleKeyPress);
 //handleKeyPress determines what action to take based on user input
 function handleKeyPress(event) {
   //If "Left Arrow" or "A" are pressed
-  if (event.keyCode == 37 || event.keyCode == 65) {
-    event.preventDefault(); //Disable default keyboard behavior (scrolling)
-    console.log("Left/A was pressed"); //Debugging Statement
-    if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left only if it is a valid move
-    showRobot(); //updates robot's position
-  }
-  //If "Right Arrow" or "D" are pressed
-  else if (event.keyCode == 39 || event.keyCode == 68) {
-    event.preventDefault(); //Disable default keyboard behavior (scrolling)
-    console.log("Right/D was pressed"); //Debugging Statement
-    if (currentPosition <= 1) currentPosition = currentPosition + 1; //move the robot's current position one column to the right only if it is a valid move
-    showRobot(); //updates robot's position
-  }
 
-  //If "Up Arrow" or "W" or "Spacebar" are pressed
-  else if (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
+  if(questionMode == false){
+    if (event.keyCode == 37 || event.keyCode == 65) {
+      event.preventDefault(); //Disable default keyboard behavior (scrolling)
+      console.log("Left/A was pressed"); //Debugging Statement
+      if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left only if it is a valid move
+      showRobot(); //updates robot's position
+    }
+    //If "Right Arrow" or "D" are pressed
+    else if (event.keyCode == 39 || event.keyCode == 68) {
+      event.preventDefault(); //Disable default keyboard behavior (scrolling)
+      console.log("Right/D was pressed"); //Debugging Statement
+      if (currentPosition <= 1) currentPosition = currentPosition + 1; //move the robot's current position one column to the right only if it is a valid move
+      showRobot(); //updates robot's position
+    }
+
+    //If "Up Arrow" or "W" or "Spacebar" are pressed
+    else if (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
+      event.preventDefault(); //Disable default keyboard behavior (scrolling)
+      console.log("Space/Up/W was pressed"); //Debugging Statement
+      mySound.play();
+      calcJump(); //Calculate Game State after the robot's "jump"
+      shiftAsteroidsDownAndGetNewRow(); //Shifts asteroids down and adds a new row
+      if(questionMode == false){
+        showGame(); //Displays new game state
+      }
+    }
+  }
+  else{
     event.preventDefault(); //Disable default keyboard behavior (scrolling)
-    console.log("Space/Up/W was pressed"); //Debugging Statement
-    calcJump(); //Calculate Game State after the robot's "jump"
-    shiftAsteroidsDownAndGetNewRow(); //Shifts asteroids down and adds a new row
-    showGame(); //Displays new game state
+
+    var optionSelected = -1;
+
+    if(event.keyCode >=49 && event.keyCode <= 52){ //selected between 1 and 4
+       optionSelected = event.keyCode - 48
+       answered = true;
+       if(optionSelected == correctAnswerPos){
+        document.getElementById("questions").innerHTML = "CORRECT! No Lives Lost! Jump to continue!"
+       }
+       else{
+        lives--;
+        if(lives != 0){
+          correctAnswerStr += "<br><br>Jump to continue!"
+        }
+        document.getElementById("questions").innerHTML = "INCORRECT! 1 Life Lost! <br> <br> The correct answer was:<br>" + correctAnswerStr
+        checkForZeroLives();
+       }
+       
+    }
+
+    if (answered && (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87)) {
+      questionMode = false;
+      answered = false;
+      console.log("RETURNING TO GAME!");
+      document.getElementById("questions").innerHTML = "";
+      document.getElementById("spaceCanvas").style.background = "url('images/Space_Background.png')";
+      showGame(); //Displays new game state
+    }
   }
 }
+
 
 function calcJump() {
   if (asteroids[2][currentPosition] === 1) {
@@ -55,28 +101,33 @@ function calcJump() {
     console.log("GOOD JUMP!");
   } else {
     //asteroid jumped to an Error Asteroid (NOTE: if adding asteroids of alternate point value, this will need to be reworked)
-    lives--;
     console.log("UNSAFE ASTEROID JUMP!");
+    prompt_question();
   }
-
-  //No lives remaining
-  if (lives == 0) {
-    stop(); //stop the timer
-    showHearts(); //refresh hearts
-    setTimeout(function () {
-      if (confirm("GAME OVER! Play Again?")) {
-        //user chose to Play Again
-        startGame(); //restart the game
-        document.getElementById("score").innerHTML = "SCORE: " + score; //refresh the score in the HTML
-      } else {
-        //if the user chose not to Play Again, disable robot movement
-        document.removeEventListener("keydown", handleKeyPress);
-      }
-    }, 30); //30ms wait to update hearts on canvas before displaying alert
-  }
+  checkForZeroLives();
 }
 
+function checkForZeroLives(){
+    //No lives remaining
+    if (lives == 0) {
+      stop(); //stop the timer
+      showHearts(); //refresh hearts
+      setTimeout(function () {
+        if (confirm("GAME OVER! Play Again?")) {
+          //user chose to Play Again
+          startGame(); //restart the game
+          document.getElementById("score").innerHTML = "SCORE: " + score; //refresh the score in the HTML
+        } else {
+          //if the user chose not to Play Again, disable robot movement
+          document.removeEventListener("keydown", handleKeyPress);
+        }
+      }, 30); //30ms wait to update hearts on canvas before displaying alert
+  }
+}
 function startGame() {
+  document.getElementById("questions").innerHTML = "";
+  document.getElementById("spaceCanvas").style.background =
+  "url('images/Space_Background.png')";
   score = 0;
   lives = 3;
   currentPosition = 1;
@@ -210,7 +261,56 @@ function showRobot(x, y) {
     //ctx.drawImage(image to display, x axis positon, y axis position, image width, image height)
     ctx.drawImage(robot, 700, 500, 100, 100);
   }
+  
 }
+
+function prompt_question(){
+  //clear the canvas of any drawings from a previous game
+  var canvas = document.getElementById("spaceCanvas");
+  var ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  canvas = document.getElementById("robotCanvas");
+  ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById("spaceCanvas").style.background =
+  "url('images/askQuestion.gif')";
+  document.getElementById("questions").innerHTML = getQuestionString();
+  questionMode = true;
+}
+
+function getQuestionString(){
+  questionIndex = Math.floor(Math.random() * Math.floor(3));
+  return shuffleQuestionAnswers(questionsDict[questionIndex])
+}
+
+function shuffleQuestionAnswers(questionObj){
+  questionString = questionObj.question + "<br>";
+  randomIndex = Math.floor(Math.random() * Math.floor(10));
+
+  for(var i = 1; i <= 4; i++){
+    console.log(randomIndex + i)
+     if((randomIndex + i) % 4 == 0){
+      correctAnswerPos = i;
+      correctAnswerStr = questionObj.correctAnswer
+      questionString += i + ") " + questionObj.correctAnswer + "<br><br>" 
+     }
+     if((randomIndex + i) % 4 == 1){
+      questionString += i + ") " + questionObj.incorrectAnswer1 + "<br><br>" 
+     }
+     if((randomIndex + i) % 4 == 2){
+      questionString += i + ") " + questionObj.incorrectAnswer2 + "<br><br>" 
+     }
+     if((randomIndex + i) % 4 == 3){
+      questionString += i + ") " + questionObj.incorrectAnswer3 + "<br><br>" 
+     }
+  }
+  return questionString;
+}
+
+
+
+
+
 
 function tick() {
   timeElapsed++;
@@ -234,4 +334,47 @@ function reset() {
   stop();
   timeElapsed = -1;
   tick();
+}
+
+
+function sound(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function(){
+    this.sound.play();
+  }
+  this.stop = function(){
+    this.sound.pause();
+  }
+}
+
+
+function generateQuestionDict(){
+  questionsDict = {};
+  questionsDict[0] = new Object();
+  questionsDict[0].question = "WHEN WAS THE PSYCHE ASTEROID DISCOVERED?";
+  questionsDict[0].correctAnswer = "1852";
+  questionsDict[0].incorrectAnswer1 = "1801";
+  questionsDict[0].incorrectAnswer2 = "1953";
+  questionsDict[0].incorrectAnswer3 = "1733";
+  
+  questionsDict[1] = new Object();
+  questionsDict[1].question = "WHO DISCOVERED THE PSYCHE ASTEROID?"
+  questionsDict[1].correctAnswer = "ANNIBALE DE GASPARIS"
+  questionsDict[1].incorrectAnswer1 = "NEIL ARMSTRONG"
+  questionsDict[1].incorrectAnswer2 = "GALILEO GALILEI"
+  questionsDict[1].incorrectAnswer3 = "MICHAEL COLLINS"
+  
+  questionsDict[2] = new Object();
+  questionsDict[2].question = "WHERE IS THE PSYCHE ASTEROID?"
+  questionsDict[2].correctAnswer = "BETWEEN MARS AND JUPITER"
+  questionsDict[2].incorrectAnswer1 = "BETWEEN SATURN AND URANUS"
+  questionsDict[2].incorrectAnswer2 = "OUTSIDE THE MILKY WAY"
+  questionsDict[2].incorrectAnswer3 = "BETWEEN URANUS AND NEPTUNE"
+  
+  return questionsDict;
 }
