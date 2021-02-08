@@ -19,7 +19,8 @@ var keyboardMode = 1; //1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 
 var answered = false;
 var studyModeIndex = 0;
 var mySound;
-var studyModeDefTitle = "WELCOME TO STUDY MODE! USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA! PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!";
+var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE! USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA! PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
+var instructionsString = "*TODO:*<br><br> Use the arrow keys or WASD to move.<br><br>You can also press space to jump.<br><br> Q/Esc returns you to main menu";
 mySound = new sound("sound/Robot.m4a");
 
 var questionsDict = generateQuestionDict();
@@ -34,16 +35,20 @@ document.addEventListener("keydown", handleKeyPress);
 //handleKeyPress determines what action to take based on user input
 function handleKeyPress(event) {
   
+  if (event.keyCode == 81 || event.keyCode == 27) {//If Q or Escape are pressed
+    keyboardMode = 1;
+    mainMenu();
+  }
 
   if(keyboardMode == 1){
     event.preventDefault();
     if((event.keyCode >=49 && event.keyCode <= 52) 
-    ||  event.keyCode >=96 && event.keyCode <= 99){ //selected between 1 and 4
-       if(event.keyCode >= 49){ //number row
+    ||  event.keyCode >=97 && event.keyCode <= 100){ //selected between 1 and 4
+       if(event.keyCode >= 49 && event.keyCode <= 52){ //number row
           gameModeSelected = event.keyCode - 48
        }
        else{
-         gameModeSelected =  event.keyCode - 95
+         gameModeSelected =  event.keyCode - 96
        }
     if (gameModeSelected == 1){
       keyboardMode = 2;
@@ -52,6 +57,10 @@ function handleKeyPress(event) {
     if (gameModeSelected == 2){
       keyboardMode == 4
       studyMode()
+    }
+    if(gameModeSelected == 3){
+      keyboardMode = -1;
+      instructions();
     }
 
   }
@@ -91,14 +100,14 @@ function handleKeyPress(event) {
     var optionSelected = -1;
 
     if((event.keyCode >=49 && event.keyCode <= 52) 
-    ||  event.keyCode >=96 && event.keyCode <= 99){ //selected between 1 and 4
-       if(event.keyCode >= 49){ //number row
+    ||  event.keyCode >=97 && event.keyCode <= 100){ //selected between 1 and 4
+       if(event.keyCode >= 49 && event.keyCode <= 52){ //number row
           optionSelected = event.keyCode - 48
        }
        else{ //keypad
-        optionSelected = event.keyCode - 95
+        optionSelected = event.keyCode - 96
        }
-       answered = true;
+       if(!answered){
        if(optionSelected == correctAnswerPos){
         document.getElementById("questions").innerHTML = "CORRECT! No Lives Lost! Jump to continue!"
        }
@@ -108,6 +117,8 @@ function handleKeyPress(event) {
           correctAnswerStr += "<br><br>Jump to continue!"
         }
         document.getElementById("questions").innerHTML = "INCORRECT! 1 Life Lost! <br> <br> The correct answer was:<br>" + correctAnswerStr
+      }
+        answered = true;
         checkForZeroLives();
        }
        
@@ -144,10 +155,6 @@ function handleKeyPress(event) {
       }
       studyModeOnScreenText = studyModeDefTitle + "<br><br>" + questionsDict[studyModeIndex].question + "<br><br>" + questionsDict[studyModeIndex].correctAnswer;
       document.getElementById("questions").innerHTML = studyModeOnScreenText;
-    }
-    else if (event.keyCode == 81 || event.keyCode == 27) {//If "Left Arrow" or "A" are pressed
-      keyboardMode = 1;
-      mainMenu();
     }
   }
 }
@@ -187,11 +194,27 @@ function checkForZeroLives(){
 
 
 function mainMenu(){
+  stop();
+  reset();
+  document.getElementById("score").innerHTML = ""
+  document.getElementById("time").innerHTML = ""
+  var canvas = document.getElementById("spaceCanvas");
+  var ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  canvas = document.getElementById("robotCanvas");
+  ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
    document.getElementById("spaceCanvas").style.background =
    "url('images/talking_animation.gif')";
-   document.getElementById("questions").innerHTML = "CHOOSE A GAME MODE!<br><br>1) Normal <br><br>2) Study!";
+   document.getElementById("questions").innerHTML = "<br><br><br><br>CHOOSE A GAME MODE!<br><br>1) Jump to Psyche!<br><br>2) Study Mode!<br><br> 3) View Instructions!";
 }
 
+
+function instructions(){
+  document.getElementById("spaceCanvas").style.background =
+  "url('images/talking_animation.gif')";
+  document.getElementById("questions").innerHTML = instructionsString;
+}
 
 function studyMode(){
   keyboardMode = 4;
