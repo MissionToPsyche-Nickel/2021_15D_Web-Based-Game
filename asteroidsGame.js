@@ -284,7 +284,7 @@ function getQuestionString(){
 }
 
 function shuffleQuestionAnswers(questionObj){
-  questionString = questionObj.question + "<br>";
+  questionString = questionObj.question + "<br><br>";
   randomIndex = Math.floor(Math.random() * Math.floor(10));
 
   for(var i = 1; i <= 4; i++){
