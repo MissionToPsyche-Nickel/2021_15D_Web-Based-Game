@@ -6,34 +6,59 @@
 console.log("Starting...."); //sanity check console log
 
 //GLOBAL VARIABLES:
+var gameMode = -1;
 var asteroids = []; //2D Array of integers (representing asteroids) where "1" is a Valid_Asteroid (Gray) and "-1" is an Error_Asteroid (Red)
 var score = 0; //current score
 var lives = 3; //remaining lives
 var currentPosition = 1; //the robot's current position, 0 is left col, 1 is middle col, 2 is right col
-var correctAnswerPos = -1;
-var correctAnswerStr = ""
+var correctAnswerPos = -1; //since the correct answer is always shuffled, this stores the correct index for comparision
+var correctAnswerStr = "" //stores the correct answer 
 var timeElapsed = 0;
 var timerID = -1;
-var questionMode = false;
-var mySound;
+var keyboardMode = 1; //1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode 
 var answered = false;
+var studyModeIndex = 0;
+var mySound;
+var studyModeDefTitle = "WELCOME TO STUDY MODE! USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA! PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!";
 mySound = new sound("sound/Robot.m4a");
 
 var questionsDict = generateQuestionDict();
 
 
 //Starts the game
-startGame();
+mainMenu();
 
 //Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
 
 //handleKeyPress determines what action to take based on user input
 function handleKeyPress(event) {
-  //If "Left Arrow" or "A" are pressed
+  
 
-  if(questionMode == false){
-    if (event.keyCode == 37 || event.keyCode == 65) {
+  if(keyboardMode == 1){
+    event.preventDefault();
+    if((event.keyCode >=49 && event.keyCode <= 52) 
+    ||  event.keyCode >=96 && event.keyCode <= 99){ //selected between 1 and 4
+       if(event.keyCode >= 49){ //number row
+          gameModeSelected = event.keyCode - 48
+       }
+       else{
+         gameModeSelected =  event.keyCode - 95
+       }
+    if (gameModeSelected == 1){
+      keyboardMode = 2;
+      startGame();
+    }
+    if (gameModeSelected == 2){
+      keyboardMode == 4
+      studyMode()
+    }
+
+  }
+}
+
+  else if(keyboardMode == 2){
+    if (event.keyCode == 37 || event.keyCode == 65) {//If "Left Arrow" or "A" are pressed
       event.preventDefault(); //Disable default keyboard behavior (scrolling)
       console.log("Left/A was pressed"); //Debugging Statement
       if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left only if it is a valid move
@@ -54,12 +79,13 @@ function handleKeyPress(event) {
       mySound.play();
       calcJump(); //Calculate Game State after the robot's "jump"
       shiftAsteroidsDownAndGetNewRow(); //Shifts asteroids down and adds a new row
-      if(questionMode == false){
+      if(keyboardMode == 2){
         showGame(); //Displays new game state
       }
     }
   }
-  else{
+  
+  else if(keyboardMode == 3){
     event.preventDefault(); //Disable default keyboard behavior (scrolling)
 
     var optionSelected = -1;
@@ -87,13 +113,41 @@ function handleKeyPress(event) {
        
     }
 
-    if (answered && (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87)) {
-      questionMode = false;
+    if (answered && (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87)) { //jump buttons
+      keyboardMode = 2;
       answered = false;
       console.log("RETURNING TO GAME!");
       document.getElementById("questions").innerHTML = "";
       document.getElementById("spaceCanvas").style.background = "url('images/Space_Background.png')";
       showGame(); //Displays new game state
+    }
+  }
+
+  else if(keyboardMode == 4){ //Study Mode!
+    event.preventDefault(); //Disable default keyboard behavior (scrolling)
+    if (event.keyCode == 37) {//If "Left Arrow" or "A" are pressed
+     if(studyModeIndex == 0){
+       studyModeIndex = questionsDict.length-1;
+     }
+     else{
+       studyModeIndex--;
+     }
+     studyModeOnScreenText = studyModeDefTitle + "<br><br>" + questionsDict[studyModeIndex].question + "<br><br>" + questionsDict[studyModeIndex].correctAnswer;
+     document.getElementById("questions").innerHTML = studyModeOnScreenText;
+    }
+    else if (event.keyCode == 39){
+      if(studyModeIndex == questionsDict.length-1){
+        studyModeIndex = 0;
+      }
+      else{
+        studyModeIndex++;
+      }
+      studyModeOnScreenText = studyModeDefTitle + "<br><br>" + questionsDict[studyModeIndex].question + "<br><br>" + questionsDict[studyModeIndex].correctAnswer;
+      document.getElementById("questions").innerHTML = studyModeOnScreenText;
+    }
+    else if (event.keyCode == 81 || event.keyCode == 27) {//If "Left Arrow" or "A" are pressed
+      keyboardMode = 1;
+      mainMenu();
     }
   }
 }
@@ -130,10 +184,28 @@ function checkForZeroLives(){
       }, 30); //30ms wait to update hearts on canvas before displaying alert
   }
 }
+
+
+function mainMenu(){
+   document.getElementById("spaceCanvas").style.background =
+   "url('images/talking_animation.gif')";
+   document.getElementById("questions").innerHTML = "CHOOSE A GAME MODE!<br><br>1) Normal <br><br>2) Study!";
+}
+
+
+function studyMode(){
+  keyboardMode = 4;
+  document.getElementById("spaceCanvas").style.background =
+  "url('images/talking_animation.gif')";
+  document.getElementById("questions").innerHTML = studyModeDefTitle + "<br><br>" + questionsDict[studyModeIndex].question + "<br><br>" + questionsDict[studyModeIndex].correctAnswer;
+}
+
 function startGame() {
   document.getElementById("questions").innerHTML = "";
   document.getElementById("spaceCanvas").style.background =
   "url('images/Space_Background.png')";
+  document.getElementById("score").innerHTML = "SCORE: 0"
+  document.getElementById("time").innerHTML = "TIME: 0"
   score = 0;
   lives = 3;
   currentPosition = 1;
@@ -281,7 +353,7 @@ function prompt_question(){
   document.getElementById("spaceCanvas").style.background =
   "url('images/talking_animation.gif')";
   document.getElementById("questions").innerHTML = getQuestionString();
-  questionMode = true;
+  keyboardMode = 3;
 }
 
 function getQuestionString(){
@@ -312,10 +384,6 @@ function shuffleQuestionAnswers(questionObj){
   }
   return questionString;
 }
-
-
-
-
 
 
 function tick() {
@@ -360,7 +428,7 @@ function sound(src) {
 
 
 function generateQuestionDict(){
-  questionsDict = {};
+  questionsDict = [];
   questionsDict[0] = new Object();
   questionsDict[0].question = "WHEN WAS THE PSYCHE ASTEROID DISCOVERED?";
   questionsDict[0].correctAnswer = "1852";
