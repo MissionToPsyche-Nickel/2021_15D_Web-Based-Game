@@ -64,8 +64,14 @@ function handleKeyPress(event) {
 
     var optionSelected = -1;
 
-    if(event.keyCode >=49 && event.keyCode <= 52){ //selected between 1 and 4
-       optionSelected = event.keyCode - 48
+    if((event.keyCode >=49 && event.keyCode <= 52) 
+    ||  event.keyCode >=96 && event.keyCode <= 99){ //selected between 1 and 4
+       if(event.keyCode >= 49){ //number row
+          optionSelected = event.keyCode - 48
+       }
+       else{ //keypad
+        optionSelected = event.keyCode - 95
+       }
        answered = true;
        if(optionSelected == correctAnswerPos){
         document.getElementById("questions").innerHTML = "CORRECT! No Lives Lost! Jump to continue!"
