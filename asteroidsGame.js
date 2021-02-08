@@ -369,18 +369,186 @@ function generateQuestionDict(){
   questionsDict[0].incorrectAnswer3 = "1733";
   
   questionsDict[1] = new Object();
-  questionsDict[1].question = "WHO DISCOVERED THE PSYCHE ASTEROID?"
-  questionsDict[1].correctAnswer = "ANNIBALE DE GASPARIS"
-  questionsDict[1].incorrectAnswer1 = "NEIL ARMSTRONG"
-  questionsDict[1].incorrectAnswer2 = "GALILEO GALILEI"
-  questionsDict[1].incorrectAnswer3 = "MICHAEL COLLINS"
+  questionsDict[1].question = "WHO DISCOVERED THE PSYCHE ASTEROID?";
+  questionsDict[1].correctAnswer = "ANNIBALE DE GASPARIS";
+  questionsDict[1].incorrectAnswer1 = "NEIL ARMSTRONG";
+  questionsDict[1].incorrectAnswer2 = "GALILEO GALILEI";
+  questionsDict[1].incorrectAnswer3 = "MICHAEL COLLINS";
   
   questionsDict[2] = new Object();
-  questionsDict[2].question = "WHERE IS THE PSYCHE ASTEROID?"
-  questionsDict[2].correctAnswer = "BETWEEN MARS AND JUPITER"
-  questionsDict[2].incorrectAnswer1 = "BETWEEN SATURN AND URANUS"
-  questionsDict[2].incorrectAnswer2 = "OUTSIDE THE MILKY WAY"
-  questionsDict[2].incorrectAnswer3 = "BETWEEN URANUS AND NEPTUNE"
+  questionsDict[2].question = "WHERE IS THE PSYCHE ASTEROID?";
+  questionsDict[2].correctAnswer = "BETWEEN MARS AND JUPITER";
+  questionsDict[2].incorrectAnswer1 = "BETWEEN SATURN AND URANUS";
+  questionsDict[2].incorrectAnswer2 = "OUTSIDE THE MILKY WAY";
+  questionsDict[2].incorrectAnswer3 = "BETWEEN URANUS AND NEPTUNE";
+  
+  questionsDict[3] = new Object();
+  questionsDict[3].question = "WHAT IS THE PSYCHE ASTEROID MADE OF?";
+  questionsDict[3].correctAnswer = "IT IS LIKELY MADE OF A MIXTURE OF ROCK AND METAL";
+  questionsDict[3].incorrectAnswer1 = "WATER";
+  questionsDict[3].incorrectAnswer2 = "GAS";
+  questionsDict[3].incorrectAnswer3 = "CRYSTALS";
+
+  questionsDict[4] = new Object();
+  questionsDict[4].question = "HOW LONG IS A DAY ON PSYCHE?";
+  questionsDict[4].correctAnswer = "ABOUT 4 HOURS AND 12 MINUTES";
+  questionsDict[4].incorrectAnswer1 = "24 HOURS";
+  questionsDict[4].incorrectAnswer2 = "3 MINUTES";
+  questionsDict[4].incorrectAnswer3 = "72 HOURS";
+
+  questionsDict[5] = new Object();
+  questionsDict[5].question = "HOW LONG IS A YEAR ON PSYCHE?";
+  questionsDict[5].correctAnswer = "ABOUT FIVE EARTH YEARS (ABOUT 1,828 EARTH DAYS)";
+  questionsDict[5].incorrectAnswer1 = "365 DAYS";
+  questionsDict[5].incorrectAnswer2 = "12 DAYS";
+  questionsDict[5].incorrectAnswer3 = "720 DAYS";
+
+  questionsDict[6] = new Object();
+  questionsDict[6].question = "HOW FAR IS THE PSYCHE ASTEROID FROM THE SUN?";
+  questionsDict[6].correctAnswer = "AN AVERAGE DISTANCE OF 3 ASTRONOMICAL UNITS";
+  questionsDict[6].incorrectAnswer1 = "15.2 ASTRONOMICAL UNITS";
+  questionsDict[6].incorrectAnswer2 = "71 ASTRONOMICAL UNITS";
+  questionsDict[6].incorrectAnswer3 = "1 ASTRONOMICAL UNIT";
+
+  questionsDict[7] = new Object();
+  questionsDict[7].question = "HOW BIG IS THE PSYCHE ASTEROID?";
+  questionsDict[7].correctAnswer = "IT IS 279 X 232 X 189 KILOMETERS (173 X 144 X 117 MILES)";
+  questionsDict[7].incorrectAnswer1 = "5 KILOMETERS LONG";
+  questionsDict[7].incorrectAnswer2 = "1500 KILOMETER RADIUS";
+  questionsDict[7].incorrectAnswer3 = "42 METERS";
+
+  questionsDict[8] = new Object();
+  questionsDict[8].question = "WHAT LAUNCH VEHICLE WILL THE PSYCHE MISSION USE?";
+  questionsDict[8].correctAnswer = "SPACEX OF HAWTHORNE, CALIFORNIA";
+  questionsDict[8].incorrectAnswer1 = "CAPE CANAVERAL AIRFORCE STATION";
+  questionsDict[8].incorrectAnswer2 = "KENNEDY SPACE CENTER";
+  questionsDict[8].incorrectAnswer3 = "VANDENBERG AIR FORCE BASE";
+
+  questionsDict[9] = new Object();
+  questionsDict[9].question = "HOW FAR WILL THE PSYCHE SPACECRAFT TRAVEL?";
+  questionsDict[9].correctAnswer = "~1.5 BILLION MILES";
+  questionsDict[9].incorrectAnswer1 = "~1.5 MILLION MILES";
+  questionsDict[9].incorrectAnswer2 = "~13.1 BILLION MILES";
+  questionsDict[9].incorrectAnswer3 = "~4.2 TRILLION MILES";
+
+  questionsDict[10] = new Object();
+  questionsDict[10].question = "HOW MUCH RAW DATA DOES THE PSYCHE MISSION EXPECT TO DELIVER OVER ITS LIFETIME?";
+  questionsDict[10].correctAnswer = "620 GIGABYTES";
+  questionsDict[10].incorrectAnswer1 = "55 GIGABYTES";  
+  questionsDict[10].incorrectAnswer2 = "62 GIGABYTES";
+  questionsDict[10].incorrectAnswer3 = "74600 GIGABYTES";
+
+  questionsDict[11] = new Object();
+  questionsDict[11].question = "TRUE OR FALSE: THE PSYCHE MISSION WILL TEST A SOPHISTICATED NEW LASER COMMUNICATION TECHNOLOGY THAT ENCODES DATA IN PHOTONS, RATHER THAN RADIO WAVES, TO COMMUNICATE BETWEEN A PROBE IN DEEP SPACE AND EARTH.";
+  questionsDict[11].correctAnswer = "TRUE";
+  questionsDict[11].incorrectAnswer1 = "FALSE";
+  questionsDict[11].incorrectAnswer2 = "N/A";
+  questionsDict[11].incorrectAnswer3 = "N/A";
+
+  questionsDict[12] = new Object();
+  questionsDict[12].question = "TRUE OR FALSE: USING LIGHT INSTEAD OF RADIO ALLOWS THE SPACECRAFT TO COMMUNICATE MORE DATA IN A GIVEN AMOUNT OF TIME.";
+  questionsDict[12].correctAnswer = "TRUE";
+  questionsDict[12].incorrectAnswer1 = "FALSE";
+  questionsDict[12].incorrectAnswer2 = "N/A";
+  questionsDict[12].incorrectAnswer3 = "N/A";
+
+  questionsDict[13] = new Object();
+  questionsDict[13].question = "WHAT IS PSYCHE?";
+  questionsDict[13].correctAnswer = "PSYCHE IS THE NAME OF AN ASTEROID ORBITING THE SUN BETWEEN MARS AND JUPITER AND THE NAME OF A NASA SPACE MISSION TO VISIT THAT ASTEROID, LED BY ASU.";
+  questionsDict[13].incorrectAnswer1 = "A TYPE OF PROPULSION";
+  questionsDict[13].incorrectAnswer2 = "THE NAME OF THE ASTRONAUT GOING TO THE ASTEROID";
+  questionsDict[13].incorrectAnswer3 = "A SPACE MISSION LED BY UNIVERSITY OF ARIZONA";
+
+  questionsDict[14] = new Object();
+  questionsDict[14].question = "WHAT KIND OF MISSION IS PSYCHE?";
+  questionsDict[14].correctAnswer = "PSYCHE IS THE 14TH MISSION SELECTED FOR NASA’S DISCOVERY PROGRAM: A SERIES OF RELATIVELY LOW-COST MISSIONS TO SOLAR SYSTEM TARGETS.";
+  questionsDict[14].incorrectAnswer1 = "A MISSION TO FIND ALIENS";
+  questionsDict[14].incorrectAnswer2 = "A MISSION TO INHABIT THE ASTEROID";
+  questionsDict[14].incorrectAnswer3 = "A COMPETITION BETWEEN SPACE EXPLORATION COMPANIES";
+
+  questionsDict[15] = new Object();
+  questionsDict[15].question = "HOW MUCH DOES THE PSYCHE MISSION COST?";
+  questionsDict[15].correctAnswer = "APPROXIMATELY $850 MILLION";
+  questionsDict[15].incorrectAnswer1 = "APPROXIMATELY $10 MILLION";
+  questionsDict[15].incorrectAnswer2 = "APPROXIMATELY $25 BILLION";
+  questionsDict[15].incorrectAnswer3 = "APPROXIMATELY $44 TRILLION";
+
+  questionsDict[16] = new Object();
+  questionsDict[16].question = "WHO IS BUILDING THE PSYCHE MISSION?";
+  questionsDict[16].correctAnswer = "THE MISSION IS LED BY ARIZONA STATE UNIVERSITY. NASA’S JET PROPULSION LABORATORY IS RESPONSIBLE FOR MISSION MANAGEMENT, OPERATIONS AND NAVIGATION.";
+  questionsDict[16].incorrectAnswer1 = "UNIVERSITY OF ARIZONA";
+  questionsDict[16].incorrectAnswer2 = "SPACEX";
+  questionsDict[16].incorrectAnswer3 = "ASU FACULTY";
+
+  questionsDict[17] = new Object();
+  questionsDict[17].question = "WHEN DID WE FIND OUT WHAT PSYCHE IS MADE OF?";
+  questionsDict[17].correctAnswer = "~2010";
+  questionsDict[17].incorrectAnswer1 = "~1987";
+  questionsDict[17].incorrectAnswer2 = "~2001";
+  questionsDict[17].incorrectAnswer3 = "~2020";
+
+  questionsDict[18] = new Object();
+  questionsDict[18].question = "HOW MUCH DOES THE PSYCHE ASTEROID WEIGH?";
+  questionsDict[18].correctAnswer = "~ 27 SEXTILLION KG";
+  questionsDict[18].incorrectAnswer1 = "~ 27 MILLION KG";
+  questionsDict[18].incorrectAnswer2 = "~ 44 SEXTILLION KG";
+  questionsDict[18].incorrectAnswer3 = "~ 37 SEXTILLION KG";
+
+  questionsDict[19] = new Object();
+  questionsDict[19].question = "TRUE OR FALSE: PSYCHE WAS THE 17TH ASTEROID TO BE FOUND";
+  questionsDict[19].correctAnswer = "FALSE";
+  questionsDict[19].incorrectAnswer1 = "TRUE";
+  questionsDict[19].incorrectAnswer2 = "N/A";
+  questionsDict[19].incorrectAnswer3 = "N/A";
+
+  questionsDict[20] = new Object();
+  questionsDict[20].question = "WHAT GIVES ASTEROID PSYCHE GREAT SCIENTIFIC INTEREST?";
+  questionsDict[20].correctAnswer  = "IT IS LIKELY RICH IN METAL. IT MAY CONSIST LARGELY OF METAL FROM THE CORE OF AN EARLY PLANET."; 
+  questionsDict[20].incorrectAnswer1 =  "IT IS A NEW ASTEROID THAT NASA JUST DISCOVERED";
+  questionsDict[20].incorrectAnswer2 =  "IT HAS VISIBLE WATER ON IT";
+  questionsDict[20].incorrectAnswer3 = "ALL THE ABOVE";
+
+  questionsDict[21] = new Object();
+  questionsDict[21].question = "WHAT YEAR IS THE PSYCHE SPACECRAFT IS TARGETED TO LAUNCH IN?";
+  questionsDict[21].correctAnswer  = "2022"; 
+  questionsDict[21].incorrectAnswer1 =  "2020";
+  questionsDict[21].incorrectAnswer2 =  "2056";
+  questionsDict[21].incorrectAnswer3 = "2030";
+
+  questionsDict[22] = new Object();
+  questionsDict[22].question = "WHAT YEAR IS THE PSYCHE SPACECRAFT SUPPOSED TO REACH THE ASTEROID?";
+  questionsDict[22].correctAnswer  = "2026"; 
+  questionsDict[22].incorrectAnswer1 =  "2084";
+  questionsDict[22].incorrectAnswer2 =  "2062";
+  questionsDict[22].incorrectAnswer3 = "2020";
+
+  questionsDict[23] = new Object();
+  questionsDict[23].question = "HOW LONG WILL THE PSYCHE SPACECRAFT STAY ON THE ASTEROID?";
+  questionsDict[23].correctAnswer  = "21 MONTHS"; 
+  questionsDict[23].incorrectAnswer1 =  "AS LONG AS IT WANTS";
+  questionsDict[23].incorrectAnswer2 =  "56 MONTHS";
+  questionsDict[23].incorrectAnswer3 = "7 YEARS";
+
+  questionsDict[24] = new Object();
+  questionsDict[24].question = "WHO WILL BE BUILDING THE PSYCHE SPACECRAFT AND ITS SOLAR PANELS?";
+  questionsDict[24].correctAnswer  = "MAXAR TECHNOLOGIES"; 
+  questionsDict[24].incorrectAnswer1 =  "NASA";
+  questionsDict[24].incorrectAnswer2 =  "ARIZONA STATE UNIVERSITY";
+  questionsDict[24].incorrectAnswer3 = "UNIVERSITY OF ARIZONA";
+
+  questionsDict[25] = new Object();
+  questionsDict[25].question = "TRUE OR FALSE: THE PSYCHE SPACECRAFT (INCLUDING THE SOLAR PANELS) IS ABOUT THE SIZE OF A SINGLES TENNIS COURT.";
+  questionsDict[25].correctAnswer  = "TRUE"; 
+  questionsDict[25].incorrectAnswer1 =  "FALSE";
+  questionsDict[25].incorrectAnswer2 =  "N/A";
+  questionsDict[25].incorrectAnswer3 = "N/A";
+
+  questionsDict[26] = new Object();
+  questionsDict[26].question = "WHAT TYPE OF PROPULSION WILL THE SPACECRAFT USE?";
+  questionsDict[26].correctAnswer  = "SOLAR PROPULSION"; 
+  questionsDict[26].incorrectAnswer1 =  "GAS TURBINE PROPULSION";
+  questionsDict[26].incorrectAnswer2 =  "DIESEL PROPULSION";
+  questionsDict[26].incorrectAnswer3 = "WATER-JET PROPULSION";
   
   return questionsDict;
 }
