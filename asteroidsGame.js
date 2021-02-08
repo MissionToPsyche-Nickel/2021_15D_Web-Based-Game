@@ -279,13 +279,13 @@ function prompt_question(){
   ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   document.getElementById("spaceCanvas").style.background =
-  "url('images/askQuestion.gif')";
+  "url('images/talking_animation.gif')";
   document.getElementById("questions").innerHTML = getQuestionString();
   questionMode = true;
 }
 
 function getQuestionString(){
-  questionIndex = Math.floor(Math.random() * Math.floor(3));
+  questionIndex = Math.floor(Math.random() * Math.floor(26));
   return shuffleQuestionAnswers(questionsDict[questionIndex])
 }
 
