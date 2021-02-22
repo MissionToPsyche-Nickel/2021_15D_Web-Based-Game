@@ -18,7 +18,7 @@ var answered = false;
 var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
 var mySound;
-var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE! USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA! PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
+var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE!<br> USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA!<br>PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
 var instructionsString = "*TODO:*<br><br> Use the arrow keys or WASD to move.<br><br>You can also press space to jump.<br><br> Q/Esc returns you to main menu";
 mySound = new sound("sound/Robot.m4a");
 
@@ -35,6 +35,9 @@ document.addEventListener("keydown", handleKeyPress);
 function handleKeyPress(event) {
   
   if (event.keyCode == 81 || event.keyCode == 27) {//If Q or Escape are pressed
+    document.getElementById("studymodeinstructions").innerHTML = "";
+    document.getElementById("studymodequestions").innerHTML = "";
+    document.getElementById("studymodeanswers").innerHTML = "";
     keyboardMode = 1;
     mainMenu();
   }
@@ -144,8 +147,6 @@ function handleKeyPress(event) {
      else{
        studyModeIndex--;
      }
-     studyModeOnScreenText = studyModeDefTitle + "<br><br>" + questionsDict[studyModeIndex].question + "<br><br>" + questionsDict[studyModeIndex].correctAnswer;
-     document.getElementById("questions").innerHTML = studyModeOnScreenText;
     }
     else if (event.keyCode == 39){
       if(studyModeIndex == questionsDict.length-1){
@@ -154,9 +155,10 @@ function handleKeyPress(event) {
       else{
         studyModeIndex++;
       }
-      studyModeOnScreenText = studyModeDefTitle + "<br><br>" + questionsDict[studyModeIndex].question + "<br><br>" + questionsDict[studyModeIndex].correctAnswer;
-      document.getElementById("questions").innerHTML = studyModeOnScreenText;
+
     }
+    document.getElementById("studymodequestions").innerHTML = questionsDict[studyModeIndex].question ;
+    document.getElementById("studymodeanswers").innerHTML =  questionsDict[studyModeIndex].correctAnswer;
   }
 }
 
@@ -219,9 +221,12 @@ function instructions(){
 
 function studyMode(){
   keyboardMode = 4;
+  document.getElementById("questions").innerHTML = "";
   document.getElementById("spaceCanvas").style.background =
-  "url('images/talking_animation.gif')";
-  document.getElementById("questions").innerHTML = studyModeDefTitle + "<br><br>" + questionsDict[studyModeIndex].question + "<br><br>" + questionsDict[studyModeIndex].correctAnswer;
+  "url('images/Study_Mode.png')";
+  document.getElementById("studymodeinstructions").innerHTML = studyModeDefTitle
+  document.getElementById("studymodequestions").innerHTML = questionsDict[studyModeIndex].question ;
+  document.getElementById("studymodeanswers").innerHTML = "<br><br>" + questionsDict[studyModeIndex].correctAnswer;
 }
 
 function startGame() {
