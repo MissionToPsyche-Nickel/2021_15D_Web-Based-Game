@@ -226,7 +226,7 @@ function studyMode(){
   "url('images/Study_Mode.png')";
   document.getElementById("studymodeinstructions").innerHTML = studyModeDefTitle
   document.getElementById("studymodequestions").innerHTML = questionsDict[studyModeIndex].question ;
-  document.getElementById("studymodeanswers").innerHTML = "<br><br>" + questionsDict[studyModeIndex].correctAnswer;
+  document.getElementById("studymodeanswers").innerHTML =  questionsDict[studyModeIndex].correctAnswer;
 }
 
 function startGame() {
