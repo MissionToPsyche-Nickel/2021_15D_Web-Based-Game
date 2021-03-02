@@ -18,10 +18,10 @@ var keyboardMode = 1; //1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 
 var answered = false;
 var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
-var mySound;
 var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE!<br> USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA!<br>PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
 var instructionsString = "*TODO:*<br><br> Use the arrow keys or WASD to move.<br><br>You can also press space to jump.<br><br> Q/Esc returns you to main menu";
-mySound = new sound("sound/Robot.m4a");
+mainMenuSound= new sound("sound/MainMenu.mp3");
+gameplaySound= new sound("sound/Gameplay.mp3");
 
 var questionsDict = generateQuestionDict();
 
@@ -96,7 +96,6 @@ function handleKeyPress(event) {
     else if (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
       event.preventDefault(); //Disable default keyboard behavior (scrolling)
       console.log("Space/Up/W was pressed"); //Debugging Statement
-      mySound.play();
       calcJump(); //Calculate Game State after the robot's "jump"
       shiftAsteroidsDownAndGetNewRow(); //Shifts asteroids down and adds a new row
       if(keyboardMode == 2){
@@ -217,7 +216,7 @@ function mainMenu(){
   ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
    document.getElementById("spaceCanvas").style.background =
-   "url('images/talking_animation.gif')";
+   "url('images/Main Menu Gif.heics')";
    document.getElementById("questions").innerHTML = "<br><br><br><br>CHOOSE A GAME MODE!<br><br>1) Jump to Psyche!<br><br>2) Study Mode!<br><br> 3) View Instructions!<br><br> 4) Time  Attack";
 }
 
@@ -239,6 +238,7 @@ function studyMode(){
 }
 
 function startGame() {
+  gameplaySound.play();
   document.getElementById("questions").innerHTML = "";
   document.getElementById("spaceCanvas").style.background =
   "url('images/Space_Background.png')";
@@ -439,6 +439,21 @@ else{
   return questionString;
 }
 
+function showResults(){
+    keyboardMode = -1;
+    //clear the canvas of any drawings from a previous game
+    var canvas = document.getElementById("spaceCanvas");
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas = document.getElementById("robotCanvas");
+    ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById("spaceCanvas").style.background =
+    "url('images/talking_animation.gif')";
+    document.getElementById("questions").innerHTML = "TIMES UP!<br><br> YOUR SCORE WAS: " + score + "!<br><br> LIVES REMAINING: " + lives +"!<br><br> Try to beat your score by playing again!<br><br>Press Q/ESC to return to the main menu" 
+}
+
+
 
 function tick() {
   
@@ -449,6 +464,7 @@ function tick() {
     timeElapsed--;
     if(timeElapsed == 0){
       stop();
+      showResults();
     }
   }
   document.getElementById("time").innerHTML = "TIMER: " + timeElapsed;
