@@ -11,9 +11,10 @@ var lives = 3; //remaining lives
 var currentPosition = 1; //the robot's current position, 0 is left col, 1 is middle col, 2 is right col
 var correctAnswerPos = -1; //since the correct answer is always shuffled, this stores the correct index for comparision
 var correctAnswerStr = "" //stores the correct answer 
-var timeElapsed = 0;
+var timeElapsed = 60;
 var timerID = -1;
-var keyboardMode = 1; //1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode 
+var gameMode = 1 //1 = Jump to Psyche, 2 = Time Attack
+var keyboardMode = 1; //1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode
 var answered = false;
 var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
@@ -54,6 +55,8 @@ function handleKeyPress(event) {
        }
     if (gameModeSelected == 1){
       keyboardMode = 2;
+      gameMode = 1;
+      timeElapsed = 0;
       startGame();
     }
     if (gameModeSelected == 2){
@@ -63,6 +66,12 @@ function handleKeyPress(event) {
     if(gameModeSelected == 3){
       keyboardMode = -1;
       instructions();
+    }
+    if(gameModeSelected == 4){
+      timeElapsed = 60;
+      keyboardMode = 2;
+      gameMode = 2;
+      startGame();
     }
 
   }
@@ -209,7 +218,7 @@ function mainMenu(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
    document.getElementById("spaceCanvas").style.background =
    "url('images/talking_animation.gif')";
-   document.getElementById("questions").innerHTML = "<br><br><br><br>CHOOSE A GAME MODE!<br><br>1) Jump to Psyche!<br><br>2) Study Mode!<br><br> 3) View Instructions!";
+   document.getElementById("questions").innerHTML = "<br><br><br><br>CHOOSE A GAME MODE!<br><br>1) Jump to Psyche!<br><br>2) Study Mode!<br><br> 3) View Instructions!<br><br> 4) Time  Attack";
 }
 
 
@@ -234,7 +243,10 @@ function startGame() {
   document.getElementById("spaceCanvas").style.background =
   "url('images/Space_Background.png')";
   document.getElementById("score").innerHTML = "SCORE: 0"
-  document.getElementById("time").innerHTML = "TIME: 0"
+  if(gameMode == 1)
+    document.getElementById("time").innerHTML = "TIMER: 0"
+  if(gameMode == 2)
+    document.getElementById("time").innerHTML = "TIMER: 60"
   score = 0;
   lives = 3;
   currentPosition = 1;
@@ -304,6 +316,7 @@ function showGame() {
   showRobot(); //display the robot
   const canvas = document.getElementById("spaceCanvas"); //canvas variable
   var ctx = canvas.getContext("2d"); //ctx is used to access the drawImage() functionality of the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the robot canvas
 
   //iterate through the 2D Array
   for (let i = 0; i < asteroids.length; i++) {
@@ -428,13 +441,29 @@ else{
 
 
 function tick() {
-  timeElapsed++;
+  
+  if(gameMode == 1){
+    timeElapsed++;
+  }
+  if(gameMode == 2){
+    timeElapsed--;
+    if(timeElapsed == 0){
+      stop();
+    }
+  }
   document.getElementById("time").innerHTML = "TIMER: " + timeElapsed;
 }
 
 function start() {
   if (timerID == -1) {
-    timerID = setInterval(tick, 1000);
+    if(gameMode == 1){
+      timeElapsed = 0
+      timerID = setInterval(tick, 1000);
+    }
+    if(gameMode == 2){
+      timeElapsed = 60
+      timerID = setInterval(tick, 1000);
+    }
   }
 }
 
@@ -447,8 +476,7 @@ function stop() {
 
 function reset() {
   stop();
-  timeElapsed = -1;
-  tick();
+  timeElapsed = 0;
 }
 
 
