@@ -20,9 +20,8 @@ var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
 var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE!<br> USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA!<br>PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
 var instructionsString = "*TODO:*<br><br> Use the arrow keys or WASD to move.<br><br>You can also press space to jump.<br><br> Q/Esc returns you to main menu";
-mainMenuSound= new sound("sound/MainMenu.mp3");
+mainMenuSound= new sound("sound/MainMenu.mp3")
 gameplaySound= new sound("sound/Gameplay.mp3");
-
 var questionsDict = generateQuestionDict();
 
 
@@ -32,14 +31,17 @@ mainMenu();
 //Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
 
+
 //handleKeyPress determines what action to take based on user input
 function handleKeyPress(event) {
-  
   if (event.keyCode == 81 || event.keyCode == 27) {//If Q or Escape are pressed
     document.getElementById("studymodeinstructions").innerHTML = "";
     document.getElementById("studymodequestions").innerHTML = "";
     document.getElementById("studymodeanswers").innerHTML = "";
+    document.getElementById("questions").innerHTML = "";
     keyboardMode = 1;
+    gameplaySound.stop();
+    mainMenuSound.play();
     mainMenu();
   }
 
@@ -57,23 +59,25 @@ function handleKeyPress(event) {
       keyboardMode = 2;
       gameMode = 1;
       timeElapsed = 0;
+      mainMenuSound.stop();
       startGame();
     }
     if (gameModeSelected == 2){
-      keyboardMode == 4
-      studyMode()
-    }
-    if(gameModeSelected == 3){
-      keyboardMode = -1;
-      instructions();
-    }
-    if(gameModeSelected == 4){
       timeElapsed = 60;
       keyboardMode = 2;
       gameMode = 2;
+      mainMenuSound.stop();
       startGame();
-    }
 
+    }
+    if(gameModeSelected == 3){
+      keyboardMode == 4
+      studyMode()
+    }
+    if(gameModeSelected == 4){
+      keyboardMode = -1;
+      instructions();
+    }
   }
 }
 
@@ -216,8 +220,7 @@ function mainMenu(){
   ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
    document.getElementById("spaceCanvas").style.background =
-   "url('images/Main Menu Gif.heics')";
-   document.getElementById("questions").innerHTML = "<br><br><br><br>CHOOSE A GAME MODE!<br><br>1) Jump to Psyche!<br><br>2) Study Mode!<br><br> 3) View Instructions!<br><br> 4) Time  Attack";
+   "url('images/Main_menu.gif')";
 }
 
 
@@ -508,6 +511,7 @@ function sound(src) {
   }
   this.stop = function(){
     this.sound.pause();
+    this.sound.currentTime = 0;
   }
 }
 
