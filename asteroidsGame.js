@@ -14,7 +14,7 @@ var correctAnswerStr = "" //stores the correct answer
 var timeElapsed = 60;
 var timerID = -1;
 var gameMode = 1 //1 = Jump to Psyche, 2 = Time Attack
-var keyboardMode = 1; //1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode
+var keyboardMode = 0; // 0 = Title Screen; 1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode
 var answered = false;
 var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
@@ -26,7 +26,7 @@ var questionsDict = generateQuestionDict();
 
 
 //Starts the game
-mainMenu();
+titleScreen();
 
 //Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
@@ -34,6 +34,20 @@ document.addEventListener("keydown", handleKeyPress);
 
 //handleKeyPress determines what action to take based on user input
 function handleKeyPress(event) {
+
+if(keyboardMode == 0){
+  keyboardMode = 1;
+  document.getElementById("studymodeinstructions").innerHTML = "";
+  document.getElementById("studymodequestions").innerHTML = "";
+  document.getElementById("studymodeanswers").innerHTML = "";
+  document.getElementById("questions").innerHTML = "";
+  keyboardMode = 1;
+  gameplaySound.stop();
+  mainMenuSound.play();
+  mainMenu();
+  return;
+}
+
   if (event.keyCode == 81 || event.keyCode == 27) {//If Q or Escape are pressed
     document.getElementById("studymodeinstructions").innerHTML = "";
     document.getElementById("studymodequestions").innerHTML = "";
@@ -208,6 +222,20 @@ function checkForZeroLives(){
 }
 
 
+
+function titleScreen(){
+  document.getElementById("score").innerHTML = ""
+  document.getElementById("time").innerHTML = ""
+  var canvas = document.getElementById("spaceCanvas");
+  var ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  canvas = document.getElementById("robotCanvas");
+  ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById("spaceCanvas").style.background =
+  "url('images/Title.gif')";
+}
+
 function mainMenu(){
   stop();
   reset();
@@ -268,6 +296,8 @@ function startGame() {
   const canvas = document.getElementById("spaceCanvas");
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // ctx.canvas.width  = window.innerWidth;
+  // ctx.canvas.height = window.innerHeight;
 
   setTimeout(function () {
     showGame();
