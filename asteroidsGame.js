@@ -31,8 +31,42 @@ titleScreen();
 //Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
 
+document.getElementById("gameMode1").addEventListener("click", handleClick);
+document.getElementById("gameMode2").addEventListener("click", handleClick);
+document.getElementById("gameMode3").addEventListener("click", handleClick);
+document.getElementById("gameMode4").addEventListener("click", handleClick);
+
 
 //handleKeyPress determines what action to take based on user input
+
+function handleClick(event){
+  if(keyboardMode == 1){
+  if(event.target.id === "gameMode1"){
+    keyboardMode = 2;
+    gameMode = 1;
+    timeElapsed = 0;
+    mainMenuSound.stop();
+    startGame();
+  }
+  if(event.target.id === "gameMode2"){
+        timeElapsed = 60;
+        keyboardMode = 2;
+        gameMode = 2;
+        mainMenuSound.stop();
+        startGame();
+
+      }
+      if(event.target.id === "gameMode3"){
+        keyboardMode == 4
+        studyMode()
+      }
+      if(event.target.id === "gameMode4"){
+        keyboardMode = -1;
+        instructions();
+      }
+    } 
+}
+
 function handleKeyPress(event) {
 
 if(keyboardMode == 0){
@@ -345,12 +379,11 @@ function showHearts() {
 }
 
 function showGame() {
-  showHearts(); //display hearts
   showRobot(); //display the robot
   const canvas = document.getElementById("spaceCanvas"); //canvas variable
   var ctx = canvas.getContext("2d"); //ctx is used to access the drawImage() functionality of the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the robot canvas
-
+  showHearts();
   //iterate through the 2D Array
   for (let i = 0; i < asteroids.length; i++) {
     for (let j = 0; j < asteroids[i].length; j++) {
