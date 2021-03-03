@@ -1,4 +1,5 @@
-//TODO: Make T/F Questions only present those two options, add T/F Attirbute probably
+//TODO: Add Mute Button
+//TODO: Results Screen
 
 
 console.log("Starting...."); //sanity check console log
@@ -567,7 +568,7 @@ function showResults(){
     ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     document.getElementById("spaceCanvas").style.background =
-    "url('images/talking_animation.gif')";
+    "url('images/Question.gif')";
     document.getElementById("questions").innerHTML = "TIMES UP!<br><br> YOUR SCORE WAS: " + score + "!<br><br> LIVES REMAINING: " + lives +"!<br><br> Try to beat your score by playing again!<br><br>Press Q/ESC to return to the main menu" 
 }
 
