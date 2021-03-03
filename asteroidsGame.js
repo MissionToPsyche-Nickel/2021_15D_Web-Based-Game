@@ -288,8 +288,7 @@ function mainMenu(){
 
 function instructions(){
   document.getElementById("spaceCanvas").style.background =
-  "url('images/Question.gif')";
-  document.getElementById("questions").innerHTML = instructionsString;
+  "url('images/Instructions.png')";
 }
 
 function studyMode(){
