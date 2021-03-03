@@ -35,6 +35,10 @@ document.getElementById("gameMode1").addEventListener("click", handleClick);
 document.getElementById("gameMode2").addEventListener("click", handleClick);
 document.getElementById("gameMode3").addEventListener("click", handleClick);
 document.getElementById("gameMode4").addEventListener("click", handleClick);
+document.getElementById("ans1").addEventListener("click", handleClick);
+document.getElementById("ans2").addEventListener("click", handleClick);
+document.getElementById("ans3").addEventListener("click", handleClick);
+document.getElementById("ans4").addEventListener("click", handleClick);
 
 
 //handleKeyPress determines what action to take based on user input
@@ -78,7 +82,42 @@ function handleClick(event){
         keyboardMode = -1;
         instructions();
       }
-    } 
+    }
+    
+    if(keyboardMode == 3){
+      
+      if((isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2"))) //selected between 1 and 2 for a T/F 
+      || (!isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2")||  (event.target.id === "ans3") || (event.target.id === "ans4") )) //selected between 1 and 4 for a normal question
+      ){ 
+       optionSelected = parseInt(event.target.id.charAt(3))
+        if(!answered){
+          console.log(correctAnswerPos)
+          console.log(optionSelected)
+        if(optionSelected == correctAnswerPos){
+         document.getElementById("questions").innerHTML = "CORRECT! No Lives Lost! Jump or Click Anywhere to continue!"
+        }
+        else{
+         lives--;
+         if(lives != 0){
+           correctAnswerStr += "<br><br> Jump or Click Anywhere to continue!"
+         }
+         document.getElementById("questions").innerHTML = "INCORRECT! 1 Life Lost! <br> <br> The correct answer was:<br>" + correctAnswerStr
+       }
+         answered = true;
+         checkForZeroLives();
+        }
+        return
+     }
+     if (answered) { //jump buttons
+      keyboardMode = 2;
+      answered = false;
+      console.log("RETURNING TO GAME!");
+      document.getElementById("questions").innerHTML = "";
+      document.getElementById("spaceCanvas").style.background = "url('images/Space_Background.png')";
+      showGame(); //Displays new game state
+    }
+
+    }
 }
 
 function handleKeyPress(event) {
