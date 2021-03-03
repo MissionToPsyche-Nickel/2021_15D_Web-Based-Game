@@ -30,7 +30,7 @@ titleScreen();
 
 //Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
-
+document.body.addEventListener('click', handleClick); 
 document.getElementById("gameMode1").addEventListener("click", handleClick);
 document.getElementById("gameMode2").addEventListener("click", handleClick);
 document.getElementById("gameMode3").addEventListener("click", handleClick);
@@ -40,6 +40,20 @@ document.getElementById("gameMode4").addEventListener("click", handleClick);
 //handleKeyPress determines what action to take based on user input
 
 function handleClick(event){
+
+  if(keyboardMode == 0){
+    keyboardMode = 1;
+    document.getElementById("studymodeinstructions").innerHTML = "";
+    document.getElementById("studymodequestions").innerHTML = "";
+    document.getElementById("studymodeanswers").innerHTML = "";
+    document.getElementById("questions").innerHTML = "";
+    keyboardMode = 1;
+    gameplaySound.stop();
+    mainMenuSound.play();
+    mainMenu();
+    return;
+  }
+
   if(keyboardMode == 1){
   if(event.target.id === "gameMode1"){
     keyboardMode = 2;
