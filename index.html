@@ -151,7 +151,41 @@
       background-color: transparent;
       border: none;
     "
-    > </button>
+    ></button>
+
+    <button 
+    type="button" 
+    id="muteButton"
+    style="
+      position: absolute;
+      z-index: 4;
+      left: 10px;
+      top: 580px;
+      height: 50px;
+      width: 70px;
+      text-align:center;
+      outline-style: none;
+      background-color: transparent;
+      border: none;
+    "
+    ></button>
+
+    <button 
+    type="button" 
+    id="playAgainButton"
+    style="
+      position: absolute;
+      z-index: 4;
+      left: 400px;
+      top: 500px;
+      height: 50px;
+      width: 320px;
+      text-align:center;
+      outline-style: none;
+      background-color: transparent;
+      border: none;
+    "
+    ></button>
 
 
     <div
@@ -178,10 +212,40 @@
     color: white;
     font-size: 15px;
     left: 325px;
-    top: 125px;
+    top: 100px;
     width: 500px;
     text-align:center;
   "
+>
+</div>
+
+<div
+id="timerResults"
+style="
+  position: absolute;
+  z-index: 2;
+  color: black;
+  font-size: 60px;
+  left: 0px;
+  top: 350px;
+  width: 500px;
+  text-align:center;
+"
+>
+</div>
+
+<div
+id="scoreResults"
+style="
+  position: absolute;
+  z-index: 2;
+  color: black;
+  font-size: 60px;
+  left: 340px;
+  top: 350px;
+  width: 500px;
+  text-align:center;
+"
 >
 </div>
 
@@ -253,6 +317,18 @@ style="
       alt="The Character"
     />
     <img
+    id="muteIcon"
+    width="0"
+    height="0"
+    src="images/Mute.png"
+  />
+  <img
+  id="unmuteIcon"
+  width="0"
+  height="0"
+  src="images/Umute.png"
+/>
+    <img
       id="Valid Asteroid"
       width="0"
       height="0"
@@ -281,6 +357,21 @@ style="
       alt="gray heart"
       
     />
+    <img
+    id="Filled Star"
+    width="0"
+    height="0"
+    src="images/Filled_Star.png"
+    alt="gray heart"
+  />
+  <img
+  id="Empty Star"
+  width="0"
+  height="0"
+  src="images/Empty_Star.png"
+  alt="gray heart"
+/>
+
     <img
       id="Faded Error Asteroid"
       width="0"

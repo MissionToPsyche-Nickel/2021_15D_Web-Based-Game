@@ -1,5 +1,4 @@
-//TODO: Add Mute Button
-//TODO: Results Screen
+//TODO: Calculate Rating
 
 
 console.log("Starting...."); //sanity check console log
@@ -15,7 +14,7 @@ var correctAnswerStr = "" //stores the correct answer
 var timeElapsed = 60;
 var timerID = -1;
 var gameMode = 1 //1 = Jump to Psyche, 2 = Time Attack
-var keyboardMode = 0; // 0 = Title Screen; 1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode
+var keyboardMode = 0; //-1 =  Results Screen; 0 = Title Screen; 1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode
 var answered = false;
 var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
@@ -23,11 +22,13 @@ var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE!<br> USE THE ARROW KEYS T
 var instructionsString = "*TODO:*<br><br> Use the arrow keys or WASD to move.<br><br>You can also press space to jump.<br><br> Q/Esc returns you to main menu";
 mainMenuSound= new sound("sound/MainMenu.mp3")
 gameplaySound= new sound("sound/Gameplay.mp3");
+var muteStatus = false;
 var questionsDict = generateQuestionDict();
 
 
 //Starts the game
 titleScreen();
+drawMuteIcon();
 
 //Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
@@ -44,7 +45,46 @@ document.getElementById("ans4").addEventListener("click", handleClick);
 
 //handleKeyPress determines what action to take based on user input
 
+
+function toggleMute(){
+
+  //first we need to find out which music is playing or needs to be played
+  //this can be done by finding out which screen we are on when the mute icon is pressed
+  // keyboard mode: 0 = Title Screen; 1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode
+  toggleGameMusic = false;
+
+  if(keyboardMode == 2 || keyboardMode == 3 || keyboardMode == -1) {
+    toggleGameMusic = true;
+  }
+
+  if(muteStatus == true){ //we are muted, and need to unmute
+    (toggleGameMusic) ?  gameplaySound.play() : mainMenuSound.play();
+  }
+  else{
+    (toggleGameMusic) ?  gameplaySound.stop() : mainMenuSound.stop();
+  }
+
+}
+
 function handleClick(event){
+
+  if(keyboardMode == -1){
+    if(event.target.id == "playAgainButton"){
+      keyboardMode = 2;
+      startGame();
+    }
+  }
+
+  if(event.target.id === "muteButton"){
+    var canvas = document.getElementById("spaceCanvas");
+    var ctx = canvas.getContext("2d");
+    // 20, 580, 50, 50
+    ctx.clearRect(20, 580, 70, 630); //clear mute icon rectangle
+    toggleMute();
+    muteStatus = !muteStatus
+    drawMuteIcon();
+    
+  }
 
   if(keyboardMode == 0){
     keyboardMode = 1;
@@ -53,8 +93,10 @@ function handleClick(event){
     document.getElementById("studymodeanswers").innerHTML = "";
     document.getElementById("questions").innerHTML = "";
     keyboardMode = 1;
-    gameplaySound.stop();
-    mainMenuSound.play();
+    if(!muteStatus){
+      gameplaySound.stop();
+      mainMenuSound.play();
+    }
     mainMenu();
     return;
   }
@@ -64,14 +106,18 @@ function handleClick(event){
     keyboardMode = 2;
     gameMode = 1;
     timeElapsed = 0;
-    mainMenuSound.stop();
+    if(!muteStatus){
+      mainMenuSound.stop();
+    }
     startGame();
   }
   if(event.target.id === "gameMode2"){
         timeElapsed = 60;
         keyboardMode = 2;
         gameMode = 2;
-        mainMenuSound.stop();
+        if(!muteStatus){
+          mainMenuSound.stop();
+        }
         startGame();
 
       }
@@ -109,7 +155,7 @@ function handleClick(event){
         }
         return
      }
-     if (answered) { //jump buttons
+     if (answered) { //clicked after answering
       keyboardMode = 2;
       answered = false;
       console.log("RETURNING TO GAME!");
@@ -122,6 +168,14 @@ function handleClick(event){
 }
 
 function handleKeyPress(event) {
+
+if(keyboardMode == -1){
+  if (answered && (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87)) { //jump buttons
+    keyboardMode = 2;
+    startGame();
+    return;
+  }
+}
 
 if(keyboardMode == 0){
   keyboardMode = 1;
@@ -293,20 +347,33 @@ function calcJump() {
 
 function checkForZeroLives(){
     //No lives remaining
-    if (lives == 0) {
-      stop(); //stop the timer
+
+    if(score == 200 && gameMode == 1){
+      stop();
+      showResults();
       showHearts(); //refresh hearts
-      setTimeout(function () {
-        if (confirm("GAME OVER! Play Again?")) {
-          //user chose to Play Again
-          startGame(); //restart the game
-          document.getElementById("score").innerHTML = "SCORE: " + score; //refresh the score in the HTML
-        } else {
-          //if the user chose not to Play Again, disable robot movement
-          document.removeEventListener("keydown", handleKeyPress);
-        }
-      }, 30); //30ms wait to update hearts on canvas before displaying alert
-  }
+    }
+
+    if(lives == 0){
+      stop();
+      showResults();
+      showHearts(); //refresh hearts
+    }
+
+    // if (lives == 0) {
+    //   stop(); //stop the timer
+    //   showHearts(); //refresh hearts
+    //   setTimeout(function () {
+    //     if (confirm("GAME OVER! Play Again?")) {
+    //       //user chose to Play Again
+    //       startGame(); //restart the game
+    //       document.getElementById("score").innerHTML = "SCORE: " + score; //refresh the score in the HTML
+    //     } else {
+    //       //if the user chose not to Play Again, disable robot movement
+    //       document.removeEventListener("keydown", handleKeyPress);
+    //     }
+    //   }, 30); //30ms wait to update hearts on canvas before displaying alert
+  //}
 }
 
 
@@ -327,11 +394,14 @@ function titleScreen(){
 function mainMenu(){
   stop();
   reset();
+  document.getElementById("timerResults").innerHTML = ""
+  document.getElementById("scoreResults").innerHTML = ""
   document.getElementById("score").innerHTML = ""
   document.getElementById("time").innerHTML = ""
   var canvas = document.getElementById("spaceCanvas");
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawMuteIcon();
   canvas = document.getElementById("robotCanvas");
   ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -349,14 +419,18 @@ function studyMode(){
   keyboardMode = 4;
   document.getElementById("questions").innerHTML = "";
   document.getElementById("spaceCanvas").style.background =
-  "url('images/Study_Mode.png')";
+  "url('images/Study_Mode_sized.png')";
   document.getElementById("studymodeinstructions").innerHTML = studyModeDefTitle
   document.getElementById("studymodequestions").innerHTML = questionsDict[studyModeIndex].question ;
   document.getElementById("studymodeanswers").innerHTML =  questionsDict[studyModeIndex].correctAnswer;
 }
 
 function startGame() {
-  gameplaySound.play();
+  if(!muteStatus){
+    gameplaySound.play();
+  }
+  document.getElementById("timerResults").innerHTML = ""
+  document.getElementById("scoreResults").innerHTML = ""
   document.getElementById("questions").innerHTML = "";
   document.getElementById("spaceCanvas").style.background =
   "url('images/Space_Background.png')";
@@ -437,6 +511,7 @@ function showGame() {
   var ctx = canvas.getContext("2d"); //ctx is used to access the drawImage() functionality of the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the robot canvas
   showHearts();
+  drawMuteIcon();
   //iterate through the 2D Array
   for (let i = 0; i < asteroids.length; i++) {
     for (let j = 0; j < asteroids[i].length; j++) {
@@ -508,12 +583,18 @@ function prompt_question(){
   var canvas = document.getElementById("spaceCanvas");
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawMuteIcon();
   canvas = document.getElementById("robotCanvas");
   ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  document.getElementById("spaceCanvas").style.background =
-  "url('images/Question.gif')";
+
   document.getElementById("questions").innerHTML = getQuestionString();
+  if(isATrueFalseQuestion){
+    document.getElementById("spaceCanvas").style.background = "url('images/QuestionTF.gif')";
+  }
+  else{
+    document.getElementById("spaceCanvas").style.background = "url('images/Question.gif')";
+  }
   keyboardMode = 3;
 }
 
@@ -560,19 +641,82 @@ else{
 
 function showResults(){
     keyboardMode = -1;
+    document.getElementById("questions").innerHTML = "";
     //clear the canvas of any drawings from a previous game
     var canvas = document.getElementById("spaceCanvas");
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    showHearts();
+    drawMuteIcon();
     canvas = document.getElementById("robotCanvas");
     ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    document.getElementById("spaceCanvas").style.background =
-    "url('images/Question.gif')";
-    document.getElementById("questions").innerHTML = "TIMES UP!<br><br> YOUR SCORE WAS: " + score + "!<br><br> LIVES REMAINING: " + lives +"!<br><br> Try to beat your score by playing again!<br><br>Press Q/ESC to return to the main menu" 
+    showStars();
+    if(lives == 0){
+      document.getElementById("spaceCanvas").style.background = "url('images/Game_over.png')";
+      document.getElementById("timerResults").innerHTML = timeElapsed + " s"
+    }
+    else if(gameMode==1){ //normal mode 
+      document.getElementById("spaceCanvas").style.background = "url('images/You_win.png')";
+      document.getElementById("timerResults").innerHTML = timeElapsed + " s"
+    }
+    else if(gameMode == 2){ //time attack mode
+      document.getElementById("spaceCanvas").style.background = "url('images/Time_up.png')";
+      document.getElementById("timerResults").innerHTML = "60s"
+    }
+    
+    document.getElementById("scoreResults").innerHTML = score + " points"
+    //document.getElementById("questions").innerHTML = "TIMES UP!<br><br> YOUR SCORE WAS: " + score + "!<br><br> LIVES REMAINING: " + lives +"!<br><br> Try to beat your score by playing again!<br><br>Press Q/ESC to return to the main menu" 
 }
 
 
+function showStars() {
+  var emptyStar = document.getElementById("Empty Star"); //red heart image variable
+  var filledStar = document.getElementById("Filled Star"); //gray heart image variable
+  const canvas = document.getElementById("spaceCanvas"); //canvas variable
+  var ctx = canvas.getContext("2d"); //ctx is used to access the drawImage() functionality of the canvas
+
+  //The drawImage() method works as following:
+  //ctx.drawImage(image to display, x axis positon, y axis position, image width, image height)
+
+  //Draw the five empty stars
+  ctx.drawImage(emptyStar, (canvas.width - canvas.width/4) - 80, canvas.height/2 + 30, 50, 50);
+  ctx.drawImage(emptyStar, (canvas.width - canvas.width/4) - 20, canvas.height/2 + 30, 50, 50);
+  ctx.drawImage(emptyStar, (canvas.width - canvas.width/4) + 40, canvas.height/2 + 30, 50, 50);
+  ctx.drawImage(emptyStar, (canvas.width - canvas.width/4) + 100, canvas.height/2 + 30, 50, 50);
+  ctx.drawImage(emptyStar, (canvas.width - canvas.width/4) + 160, canvas.height/2 + 30, 50, 50);
+  //fill the stars based on rating
+  var rating = calcRating();
+   if (rating >= 1) ctx.drawImage(filledStar, (canvas.width - canvas.width/4) - 80, canvas.height/2 + 30, 50, 50);
+   if (rating >= 2) ctx.drawImage(filledStar, (canvas.width - canvas.width/4) - 20, canvas.height/2 + 30, 50, 50);
+   if (rating >= 3) ctx.drawImage(filledStar, (canvas.width - canvas.width/4) + 40, canvas.height/2 + 30, 50, 50);
+   if (rating >= 4) ctx.drawImage(filledStar, (canvas.width - canvas.width/4) + 100, canvas.height/2 + 30, 50, 50);
+   if (rating >= 5) ctx.drawImage(filledStar, (canvas.width - canvas.width/4) + 160, canvas.height/2 + 30, 50, 50);
+}
+
+function calcRating(){
+  return 4;
+}
+
+function drawMuteIcon(){
+  (muteStatus) ? drawMute() : drawUnmute();
+}
+
+function drawMute(){
+  var canvas = document.getElementById("spaceCanvas");
+    var ctx = canvas.getContext("2d");
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var muteBtn = document.getElementById("muteIcon"); //robot image variable
+    ctx.drawImage(muteBtn, 20, 580, 50, 50);
+}
+
+function drawUnmute(){
+  var canvas = document.getElementById("spaceCanvas");
+    var ctx = canvas.getContext("2d");
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var muteBtn = document.getElementById("unmuteIcon"); //robot image variable
+    ctx.drawImage(muteBtn, 20, 580, 50, 50);
+}
 
 function tick() {
   
