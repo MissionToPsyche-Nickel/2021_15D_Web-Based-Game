@@ -720,6 +720,11 @@ function drawUnmute(){
 
 function tick() {
   
+if(timeElapsed != 0 && timeElapsed % 114 == 0){
+  gameplaySound.stop();
+  gameplaySound.play();
+}
+
   if(gameMode == 1){
     timeElapsed++;
   }
