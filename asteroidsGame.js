@@ -20,8 +20,8 @@ var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
 var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE!<br> USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA!<br>PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
 var instructionsString = "*TODO:*<br><br> Use the arrow keys or WASD to move.<br><br>You can also press space to jump.<br><br> Q/Esc returns you to main menu";
-mainMenuSound= new sound("sound/MainMenu.mp3")
-gameplaySound= new sound("sound/Gameplay.mp3");
+mainMenuSound= new sound("sound/MainMenu.mp3",1)
+gameplaySound= new sound("sound/Gameplay.mp3",0.5);
 var muteStatus = false;
 var questionsDict = generateQuestionDict();
 
@@ -719,12 +719,6 @@ function drawUnmute(){
 }
 
 function tick() {
-  
-if(timeElapsed != 0 && timeElapsed % 114 == 0){
-  gameplaySound.stop();
-  gameplaySound.play();
-}
-
   if(gameMode == 1){
     timeElapsed++;
   }
@@ -764,12 +758,14 @@ function reset() {
 }
 
 
-function sound(src) {
+function sound(src, volume) {
   this.sound = document.createElement("audio");
   this.sound.src = src;
   this.sound.setAttribute("preload", "auto");
   this.sound.setAttribute("controls", "none");
   this.sound.style.display = "none";
+  this.sound.loop = true
+  this.sound.volume = volume
   document.body.appendChild(this.sound);
   this.play = function(){
     this.sound.play();
