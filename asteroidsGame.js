@@ -1,10 +1,7 @@
 //TODO: Calculate Rating
-
-
 console.log("Starting...."); //sanity check console log
 
 //GLOBAL VARIABLES:
-var gameMode = -1;
 var asteroids = []; //2D Array of integers (representing asteroids) where "1" is a Valid_Asteroid (Gray) and "-1" is an Error_Asteroid (Red)
 var score = 0; //current score
 var lives = 3; //remaining lives
@@ -14,7 +11,14 @@ var correctAnswerStr = "" //stores the correct answer
 var timeElapsed = 60;
 var timerID = -1;
 var gameMode = 1 //1 = Jump to Psyche, 2 = Time Attack
-var keyboardMode = 0; //-1 =  Results Screen; 0 = Title Screen; 1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode
+const resultsScreen = -1;
+const titleScreen = 0;
+const mainMenuScreen = 1;
+const gameplayScreen = 2;
+const questionScreen = 3;
+const studyScreen = 4;
+const instructionsScreen = 5;
+var activeScreen = titleScreen; 
 var answered = false;
 var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
@@ -27,7 +31,7 @@ var questionsDict = generateQuestionDict();
 
 
 //Starts the game
-titleScreen();
+showTitleScreen();
 drawMuteIcon();
 
 //Create a Keyboard Listener to get user input
@@ -43,380 +47,247 @@ document.getElementById("ans3").addEventListener("click", handleClick);
 document.getElementById("ans4").addEventListener("click", handleClick);
 
 
-//handleKeyPress determines what action to take based on user input
-
-
 function toggleMute(){
-
   //first we need to find out which music is playing or needs to be played
   //this can be done by finding out which screen we are on when the mute icon is pressed
-  // keyboard mode: 0 = Title Screen; 1 = MainMenu; 2 = Normal Gameplay; 3 = Question Mode; 4 = Study Mode
-  toggleGameMusic = false;
+  toggleGameMusicOrMenu = false;
 
-  if(keyboardMode == 2 || keyboardMode == 3 || keyboardMode == -1) {
-    toggleGameMusic = true;
+  if(activeScreen == gameplayScreen || activeScreen == questionScreen || activeScreen == resultsScreen || activeScreen == instructionsScreen) {
+    toggleGameMusicOrMenu = true;
   }
 
-  if(muteStatus == true){ //we are muted, and need to unmute
-    (toggleGameMusic) ?  gameplaySound.play() : mainMenuSound.play();
+  if(muteStatus == true){ //currently muted, need to unmute
+    (toggleGameMusicOrMenu) ?  gameplaySound.play() : mainMenuSound.play();
   }
-  else{
-    (toggleGameMusic) ?  gameplaySound.stop() : mainMenuSound.stop();
+  else{ //currently unmuted, need to mute 
+    (toggleGameMusicOrMenu) ?  gameplaySound.stop() : mainMenuSound.stop();
   }
 
+  muteStatus = !muteStatus
+  drawMuteIcon();
 }
 
 function handleClick(event){
 
-  if(keyboardMode == -1){
-    if(event.target.id == "playAgainButton"){
-      keyboardMode = 2;
-      startGame();
-    }
-  }
-
   if(event.target.id === "muteButton"){
-    var canvas = document.getElementById("spaceCanvas");
-    var ctx = canvas.getContext("2d");
-    // 20, 580, 50, 50
-    ctx.clearRect(20, 580, 70, 630); //clear mute icon rectangle
     toggleMute();
-    muteStatus = !muteStatus
-    drawMuteIcon();
+  }
+
+  if(activeScreen == resultsScreen){
+    if(event.target.id == "playAgainButton"){
+      startGame();
+    }
+  }
+
+  if(activeScreen == mainMenuScreen){ 
+    gameModeSelected = parseInt(event.target.id.charAt(8))
+    chooseGameMode(gameModeSelected)
+  }
     
-  }
-
-  if(keyboardMode == 0){
-    keyboardMode = 1;
-    document.getElementById("studymodeinstructions").innerHTML = "";
-    document.getElementById("studymodequestions").innerHTML = "";
-    document.getElementById("studymodeanswers").innerHTML = "";
-    document.getElementById("questions").innerHTML = "";
-    keyboardMode = 1;
-    if(!muteStatus){
-      gameplaySound.stop();
-      mainMenuSound.play();
-    }
-    mainMenu();
-    return;
-  }
-
-  if(keyboardMode == 1){
-  if(event.target.id === "gameMode1"){
-    keyboardMode = 2;
-    gameMode = 1;
-    timeElapsed = 0;
-    if(!muteStatus){
-      mainMenuSound.stop();
-    }
-    startGame();
-  }
-  if(event.target.id === "gameMode2"){
-        timeElapsed = 60;
-        keyboardMode = 2;
-        gameMode = 2;
-        if(!muteStatus){
-          mainMenuSound.stop();
+  if(activeScreen == questionScreen){
+    if((isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2"))) //selected between 1 and 2 for a T/F 
+    || (!isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2")||  (event.target.id === "ans3") || (event.target.id === "ans4") )) //selected between 1 and 4 for a normal question
+    ){ 
+      console.log(event.target);
+      console.log("KEYBOARD MODE: " + activeScreen) 
+      optionSelected = parseInt(event.target.id.charAt(3))
+      if(!answered){
+          checkOptionSelected(optionSelected)
         }
-        startGame();
-
-      }
-      if(event.target.id === "gameMode3"){
-        keyboardMode == 4
-        studyMode()
-      }
-      if(event.target.id === "gameMode4"){
-        keyboardMode = -1;
-        instructions();
-      }
     }
-    
-    if(keyboardMode == 3){
-      
-      if((isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2"))) //selected between 1 and 2 for a T/F 
-      || (!isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2")||  (event.target.id === "ans3") || (event.target.id === "ans4") )) //selected between 1 and 4 for a normal question
-      ){ 
-       optionSelected = parseInt(event.target.id.charAt(3))
-        if(!answered){
-          console.log(correctAnswerPos)
-          console.log(optionSelected)
-        if(optionSelected == correctAnswerPos){
-         document.getElementById("questions").innerHTML = "CORRECT! No Lives Lost! Jump or Click Anywhere to continue!"
-        }
-        else{
-         lives--;
-         if(lives != 0){
-           correctAnswerStr += "<br><br> Jump or Click Anywhere to continue!"
-         }
-         document.getElementById("questions").innerHTML = "INCORRECT! 1 Life Lost! <br> <br> The correct answer was:<br>" + correctAnswerStr
-       }
-         answered = true;
-         checkForZeroLives();
-        }
-        return
-     }
-     if (answered) { //clicked after answering
-      keyboardMode = 2;
-      answered = false;
-      console.log("RETURNING TO GAME!");
-      document.getElementById("questions").innerHTML = "";
-      document.getElementById("spaceCanvas").style.background = "url('images/Space_Background.png')";
-      showGame(); //Displays new game state
+    else if(answered){
+      returnToGame();
     }
-
-    }
+  }
 }
 
+//handleKeyPress determines what action to take based on user input
 function handleKeyPress(event) {
+  event.preventDefault();
 
-if(keyboardMode == -1){
-  if (answered && (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87)) { //jump buttons
-    keyboardMode = 2;
-    startGame();
-    return;
-  }
-}
-
-if(keyboardMode == 0){
-  keyboardMode = 1;
-  document.getElementById("studymodeinstructions").innerHTML = "";
-  document.getElementById("studymodequestions").innerHTML = "";
-  document.getElementById("studymodeanswers").innerHTML = "";
-  document.getElementById("questions").innerHTML = "";
-  keyboardMode = 1;
-  gameplaySound.stop();
-  mainMenuSound.play();
-  mainMenu();
-  return;
-}
-
-  if (event.keyCode == 81 || event.keyCode == 27) {//If Q or Escape are pressed
-    document.getElementById("studymodeinstructions").innerHTML = "";
-    document.getElementById("studymodequestions").innerHTML = "";
-    document.getElementById("studymodeanswers").innerHTML = "";
-    document.getElementById("questions").innerHTML = "";
-    keyboardMode = 1;
-    gameplaySound.stop();
-    mainMenuSound.play();
+  if(activeScreen == titleScreen){
     mainMenu();
   }
 
-  if(keyboardMode == 1){
-    event.preventDefault();
-    if((event.keyCode >=49 && event.keyCode <= 52) 
-    ||  event.keyCode >=97 && event.keyCode <= 100){ //selected between 1 and 4
-       if(event.keyCode >= 49 && event.keyCode <= 52){ //number row
-          gameModeSelected = event.keyCode - 48
-       }
-       else{
-         gameModeSelected =  event.keyCode - 96
-       }
-    if (gameModeSelected == 1){
-      keyboardMode = 2;
-      gameMode = 1;
-      timeElapsed = 0;
-      mainMenuSound.stop();
-      startGame();
+  else if (event.keyCode == 81 || event.keyCode == 27) {//If Q or Escape are pressed
+      mainMenu();
     }
-    if (gameModeSelected == 2){
-      timeElapsed = 60;
-      keyboardMode = 2;
-      gameMode = 2;
-      mainMenuSound.stop();
-      startGame();
 
-    }
-    if(gameModeSelected == 3){
-      keyboardMode == 4
-      studyMode()
-    }
-    if(gameModeSelected == 4){
-      keyboardMode = -1;
-      instructions();
-    }
+  else if(activeScreen == mainMenuScreen){
+        gameModeSelected = getNumPressed(event.keyCode)
+        chooseGameMode(gameModeSelected)
   }
+
+  else if(activeScreen == gameplayScreen){
+      if (event.keyCode == 37 || event.keyCode == 65) {//If "Left Arrow" or "A" are pressed
+        console.log("Left/A was pressed"); //Debugging Statement
+        if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left only if it is a valid move
+        showRobot(); //updates robot's position
+      }
+      //If "Right Arrow" or "D" are pressed
+      else if (event.keyCode == 39 || event.keyCode == 68) {
+        console.log("Right/D was pressed"); //Debugging Statement
+        if (currentPosition <= 1) currentPosition = currentPosition + 1; //move the robot's current position one column to the right only if it is a valid move
+        showRobot(); //updates robot's position
+      }
+
+      //If "Up Arrow" or "W" or "Spacebar" are pressed
+      else if (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
+        console.log("Space/Up/W was pressed"); //Debugging Statement
+        calcJump(); //Calculate Game State after the robot's "jump"
+        shiftAsteroidsDownAndGetNewRow(); //Shifts asteroids down and adds a new row
+        if(activeScreen == gameplayScreen){
+          showGame(); //Displays new game state
+        }
+      }
+    }
+    
+  else if(activeScreen == questionScreen){
+      if (answered && (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87)) { //jump buttons
+        returnToGame();
+      }
+      var optionSelected = -1;
+      if(validOptionPressed(event.keyCode)){
+        optionSelected = getNumPressed(event.keyCode);
+        if(!answered){
+          checkOptionSelected(optionSelected)
+        }
+      }
 }
 
-  else if(keyboardMode == 2){
-    if (event.keyCode == 37 || event.keyCode == 65) {//If "Left Arrow" or "A" are pressed
-      event.preventDefault(); //Disable default keyboard behavior (scrolling)
-      console.log("Left/A was pressed"); //Debugging Statement
-      if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left only if it is a valid move
-      showRobot(); //updates robot's position
-    }
-    //If "Right Arrow" or "D" are pressed
-    else if (event.keyCode == 39 || event.keyCode == 68) {
-      event.preventDefault(); //Disable default keyboard behavior (scrolling)
-      console.log("Right/D was pressed"); //Debugging Statement
-      if (currentPosition <= 1) currentPosition = currentPosition + 1; //move the robot's current position one column to the right only if it is a valid move
-      showRobot(); //updates robot's position
-    }
-
-    //If "Up Arrow" or "W" or "Spacebar" are pressed
-    else if (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
-      event.preventDefault(); //Disable default keyboard behavior (scrolling)
-      console.log("Space/Up/W was pressed"); //Debugging Statement
-      calcJump(); //Calculate Game State after the robot's "jump"
-      shiftAsteroidsDownAndGetNewRow(); //Shifts asteroids down and adds a new row
-      if(keyboardMode == 2){
-        showGame(); //Displays new game state
+  else if(activeScreen == studyScreen){ //Study Mode!
+    if (event.keyCode == 37) {//If "Left Arrow" is pressed
+      if(studyModeIndex == 0){
+        studyModeIndex = questionsDict.length-1;
+      }
+      else{
+        studyModeIndex--;
       }
     }
-  }
-  
-  else if(keyboardMode == 3){
-    event.preventDefault(); //Disable default keyboard behavior (scrolling)
-
-    var optionSelected = -1;
-
-    if((isATrueFalseQuestion && ((event.keyCode >=49 && event.keyCode <= 50) ||  (event.keyCode >=97 && event.keyCode <= 98))) //selected between 1 and 2 for a T/F 
-     ||(!isATrueFalseQuestion && ((event.keyCode >=49 && event.keyCode <= 52) ||  (event.keyCode >=97 && event.keyCode <= 100))) //selected between 1 and 4 for a normal question
-     ){ 
- 
-       if(event.keyCode >= 49 && event.keyCode <= 52){ //number row
-          optionSelected = event.keyCode - 48
-       }
-       else{ //keypad
-        optionSelected = event.keyCode - 96
-       }
-       if(!answered){
-       if(optionSelected == correctAnswerPos){
-        document.getElementById("questions").innerHTML = "CORRECT! No Lives Lost! Jump to continue!"
-       }
-       else{
-        lives--;
-        if(lives != 0){
-          correctAnswerStr += "<br><br>Jump to continue!"
-        }
-        document.getElementById("questions").innerHTML = "INCORRECT! 1 Life Lost! <br> <br> The correct answer was:<br>" + correctAnswerStr
-      }
-        answered = true;
-        checkForZeroLives();
-       }
-       
-    }
-
-    if (answered && (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87)) { //jump buttons
-      keyboardMode = 2;
-      answered = false;
-      console.log("RETURNING TO GAME!");
-      document.getElementById("questions").innerHTML = "";
-      document.getElementById("spaceCanvas").style.background = "url('images/Space_Background.png')";
-      showGame(); //Displays new game state
-    }
-  }
-
-  else if(keyboardMode == 4){ //Study Mode!
-    event.preventDefault(); //Disable default keyboard behavior (scrolling)
-    if (event.keyCode == 37) {//If "Left Arrow" or "A" are pressed
-     if(studyModeIndex == 0){
-       studyModeIndex = questionsDict.length-1;
-     }
-     else{
-       studyModeIndex--;
-     }
-    }
-    else if (event.keyCode == 39){
+    else if (event.keyCode == 39){//If "Right Arrow" is pressed
       if(studyModeIndex == questionsDict.length-1){
         studyModeIndex = 0;
       }
       else{
         studyModeIndex++;
       }
-
     }
     document.getElementById("studymodequestions").innerHTML = questionsDict[studyModeIndex].question ;
     document.getElementById("studymodeanswers").innerHTML =  questionsDict[studyModeIndex].correctAnswer;
   }
 }
 
+function validOptionPressed(keyPressed){
+  if(!isATrueFalseQuestion){
+    if((keyPressed >=49 && keyPressed <= 52) ||(keyPressed>=97 && keyPressed <= 100)){return true}
+    else{return false}
+  }
+  else{
+      if((keyPressed >=49 && keyPressed <= 50) ||(keyPressed >=97 && keyPressede <= 98)){return true}
+      else{return false}
+  }
+}
+
+function getNumPressed(keyPressed){
+    if(keyPressed >= 49 && keyPressed <= 52){return keyPressed - 48} //number row
+    else{return keyPressed - 96} //keypad
+}
+
+function returnToGame(){
+  activeScreen = 2;
+  answered = false;
+  console.log("RETURNING TO GAME!");
+  document.getElementById("questions").innerHTML = "";
+  document.getElementById("spaceCanvas").style.background = "url('images/Space_Background.png')";
+  showGame(); //Displays new game state
+}
+
+function checkOptionSelected(optionSelected){
+    if(optionSelected == correctAnswerPos){
+      document.getElementById("questions").innerHTML = "CORRECT! No Lives Lost! Jump to continue!"
+    }
+    else{
+      lives--;
+      if(lives != 0){
+        correctAnswerStr += "<br><br>Jump to continue!"
+      }
+      document.getElementById("questions").innerHTML = "INCORRECT! 1 Life Lost! <br> <br> The correct answer was:<br>" + correctAnswerStr
+    }
+      answered = true;
+      checkForEndGame();
+}
+
+function chooseGameMode(gameModeSelected){
+  if(gameModeSelected == 1){
+    gameMode = 1;
+    timeElapsed = 0;
+    startGame();
+  }
+  if(gameModeSelected == 2){
+    timeElapsed = 60;
+    gameMode = 2;
+    startGame();
+  }
+  if(gameModeSelected == 3){
+    studyMode();
+  }
+  if(gameModeSelected == 4){
+    instructions();
+  }
+}
+
 
 function calcJump() {
-  if (asteroids[2][currentPosition] === 1) {
-    //check if the asteroid about to be "jumped" to is a valid asteroid
+  if (asteroids[2][currentPosition] === 1) { //player jumped to an Valid Asteroid 
     score++;
     document.getElementById("score").innerHTML = "SCORE: " + score; //refresh the score in the HTML
-    console.log("GOOD JUMP!");
-  } else {
-    //asteroid jumped to an Error Asteroid (NOTE: if adding asteroids of alternate point value, this will need to be reworked)
-    console.log("UNSAFE ASTEROID JUMP!");
+  } 
+  else { //player jumped to an Error Asteroid 
     prompt_question();
   }
-  checkForZeroLives();
+  checkForEndGame();
 }
 
-function checkForZeroLives(){
-    //No lives remaining
-
-    if(score == 200 && gameMode == 1){
+function checkForEndGame(){
+    if(lives == 0 || (score == 200 && gameMode == 1)){
       stop();
       showResults();
-      showHearts(); //refresh hearts
     }
-
-    if(lives == 0){
-      stop();
-      showResults();
-      showHearts(); //refresh hearts
-    }
-
-    // if (lives == 0) {
-    //   stop(); //stop the timer
-    //   showHearts(); //refresh hearts
-    //   setTimeout(function () {
-    //     if (confirm("GAME OVER! Play Again?")) {
-    //       //user chose to Play Again
-    //       startGame(); //restart the game
-    //       document.getElementById("score").innerHTML = "SCORE: " + score; //refresh the score in the HTML
-    //     } else {
-    //       //if the user chose not to Play Again, disable robot movement
-    //       document.removeEventListener("keydown", handleKeyPress);
-    //     }
-    //   }, 30); //30ms wait to update hearts on canvas before displaying alert
-  //}
 }
 
 
 
-function titleScreen(){
+function showTitleScreen(){
   document.getElementById("score").innerHTML = ""
   document.getElementById("time").innerHTML = ""
-  var canvas = document.getElementById("spaceCanvas");
-  var ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  canvas = document.getElementById("robotCanvas");
-  ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  clearScreen();
   document.getElementById("spaceCanvas").style.background =
   "url('images/Title.gif')";
 }
 
 function mainMenu(){
+  activeScreen = mainMenuScreen;
+  if(!muteStatus){
+    gameplaySound.stop();
+    mainMenuSound.play();
+  }
   stop();
   reset();
-  document.getElementById("timerResults").innerHTML = ""
-  document.getElementById("scoreResults").innerHTML = ""
-  document.getElementById("score").innerHTML = ""
-  document.getElementById("time").innerHTML = ""
-  var canvas = document.getElementById("spaceCanvas");
-  var ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawMuteIcon();
-  canvas = document.getElementById("robotCanvas");
-  ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-   document.getElementById("spaceCanvas").style.background =
+  clearScreen();
+  drawMuteIcon(); 
+  document.getElementById("spaceCanvas").style.background =
    "url('images/Main_menu.gif')";
 }
 
 
 function instructions(){
+  activeScreen = instructionsScreen;
   document.getElementById("spaceCanvas").style.background =
   "url('images/Instructions.png')";
 }
 
 function studyMode(){
-  keyboardMode = 4;
+  activeScreen = studyScreen;
   document.getElementById("questions").innerHTML = "";
   document.getElementById("spaceCanvas").style.background =
   "url('images/Study_Mode_sized.png')";
@@ -426,7 +297,9 @@ function studyMode(){
 }
 
 function startGame() {
+  activeScreen = gameplayScreen;
   if(!muteStatus){
+    mainMenuSound.stop();
     gameplaySound.play();
   }
   document.getElementById("timerResults").innerHTML = ""
@@ -454,12 +327,8 @@ function startGame() {
   asteroids.push([1, 1, 1]);
 
   //clear the canvas of any drawings from a previous game
-  const canvas = document.getElementById("spaceCanvas");
-  var ctx = canvas.getContext("2d");
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // ctx.canvas.width  = window.innerWidth;
-  // ctx.canvas.height = window.innerHeight;
-
+  clearSpaceCanvas();
+  
   setTimeout(function () {
     showGame();
   }, 30); //30ms timeout to make sure images are loaded
@@ -595,7 +464,7 @@ function prompt_question(){
   else{
     document.getElementById("spaceCanvas").style.background = "url('images/Question.gif')";
   }
-  keyboardMode = 3;
+  activeScreen = 3;
 }
 
 function getQuestionString(){
@@ -640,17 +509,21 @@ else{
 }
 
 function showResults(){
-    keyboardMode = -1;
+    activeScreen = -1;
+    answered = false;
     document.getElementById("questions").innerHTML = "";
+    document.getElementById("time").innerHTML = ""; 
+    document.getElementById("score").innerHTML = "";
     //clear the canvas of any drawings from a previous game
     var canvas = document.getElementById("spaceCanvas");
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    showHearts();
-    drawMuteIcon();
     canvas = document.getElementById("robotCanvas");
     ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    showHearts();
+    drawMuteIcon();
+
     showStars();
     if(lives == 0){
       document.getElementById("spaceCanvas").style.background = "url('images/Game_over.png')";
@@ -668,7 +541,6 @@ function showResults(){
     document.getElementById("scoreResults").innerHTML = score + " points"
     //document.getElementById("questions").innerHTML = "TIMES UP!<br><br> YOUR SCORE WAS: " + score + "!<br><br> LIVES REMAINING: " + lives +"!<br><br> Try to beat your score by playing again!<br><br>Press Q/ESC to return to the main menu" 
 }
-
 
 function showStars() {
   var emptyStar = document.getElementById("Empty Star"); //red heart image variable
@@ -698,24 +570,37 @@ function calcRating(){
   return 4;
 }
 
+function clearSpaceCanvas(){
+  var canvas = document.getElementById("spaceCanvas");
+  var ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function clearRobotCanvas(){
+  canvas = document.getElementById("robotCanvas");
+  ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function clearScreen(){
+  document.getElementById("studymodeinstructions").innerHTML = "";
+  document.getElementById("studymodequestions").innerHTML = "";
+  document.getElementById("studymodeanswers").innerHTML = "";
+  document.getElementById("questions").innerHTML = "";
+  document.getElementById("timerResults").innerHTML = ""
+  document.getElementById("scoreResults").innerHTML = ""
+  document.getElementById("score").innerHTML = ""
+  document.getElementById("time").innerHTML = ""
+  clearSpaceCanvas();
+  clearRobotCanvas();
+}
+
 function drawMuteIcon(){
-  (muteStatus) ? drawMute() : drawUnmute();
-}
-
-function drawMute(){
   var canvas = document.getElementById("spaceCanvas");
-    var ctx = canvas.getContext("2d");
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
-    var muteBtn = document.getElementById("muteIcon"); //robot image variable
-    ctx.drawImage(muteBtn, 20, 580, 50, 50);
-}
-
-function drawUnmute(){
-  var canvas = document.getElementById("spaceCanvas");
-    var ctx = canvas.getContext("2d");
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
-    var muteBtn = document.getElementById("unmuteIcon"); //robot image variable
-    ctx.drawImage(muteBtn, 20, 580, 50, 50);
+  var ctx = canvas.getContext("2d");
+  ctx.clearRect(20, 580, 70, 630); //clear mute icon rectangle
+  var muteBtn = (muteStatus) ? document.getElementById("muteIcon") : document.getElementById("unmuteIcon") ; //decide which icon to draw
+  ctx.drawImage(muteBtn, 20, 580, 50, 50);
 }
 
 function tick() {
@@ -757,7 +642,6 @@ function reset() {
   timeElapsed = 0;
 }
 
-
 function sound(src, volume) {
   this.sound = document.createElement("audio");
   this.sound.src = src;
@@ -775,7 +659,6 @@ function sound(src, volume) {
     this.sound.currentTime = 0;
   }
 }
-
 
 function generateQuestionDict(){
   questionsDict = [];
