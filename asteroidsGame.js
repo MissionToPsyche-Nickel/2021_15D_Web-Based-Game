@@ -421,7 +421,7 @@ function showGame() {
   }
 }
 
-function showRobot(x, y) {
+function showRobot() {
   const canvas = document.getElementById("robotCanvas"); //the robot lives on a separate canvas since it's position needs to be cleared
   var ctx = canvas.getContext("2d"); //ctx is used to access the drawImage() functionality of the canvas
   var robot = document.getElementById("Character"); //robot image variable
@@ -527,7 +527,12 @@ function showResults(){
     showStars();
     if(lives == 0){
       document.getElementById("spaceCanvas").style.background = "url('images/Game_over.png')";
-      document.getElementById("timerResults").innerHTML = timeElapsed + " s"
+      if(gameMode==1){
+        document.getElementById("timerResults").innerHTML = timeElapsed + " s"
+      }
+      else{
+        document.getElementById("timerResults").innerHTML = 60 - timeElapsed + " s"
+      }
     }
     else if(gameMode==1){ //normal mode 
       document.getElementById("spaceCanvas").style.background = "url('images/You_win.png')";
@@ -567,7 +572,26 @@ function showStars() {
 }
 
 function calcRating(){
-  return 4;
+  rating = 0;
+  //in regular mode, the goal is to reach 200 points, the closer you get to this goal the more stars are earned, with 5 stars requiring no lives lost
+  if(gameMode == 1){
+    if(score <= 50) rating = 0;
+    else if(score <= 100) rating = 1;
+    else if(score <= 150) rating = 2;
+    else if(score <= 199) rating = 3;
+    else if(score == 200 && lives != 3) rating = 4;
+    else if(score == 200 && lives == 3) rating = 5;
+  }
+  //in time attack, no stars are received if lives run out since this is a test of skill under pressure
+  if(gameMode == 2){
+    if(lives == 0) rating = 0;
+    else if(score <= 100) rating = 1;
+    else if(score <= 150) rating = 2;
+    else if(score <= 199) rating = 3;
+    else if(score >= 200 && lives != 3) rating = 4;
+    else if(score >= 200 && lives == 3) rating = 5;
+  }
+  return rating;
 }
 
 function clearSpaceCanvas(){
