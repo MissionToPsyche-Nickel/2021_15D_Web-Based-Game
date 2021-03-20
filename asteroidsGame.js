@@ -10,7 +10,9 @@ var correctAnswerPos = -1; //since the correct answer is always shuffled, this s
 var correctAnswerStr = "" //stores the correct answer 
 var timeElapsed = 60;
 var timerID = -1;
-var gameMode = 1 //1 = Jump to Psyche, 2 = Time Attack
+const normalMode = 1;
+const timeAttackMode = 2;
+var gameMode = 1 
 const resultsScreen = -1;
 const titleScreen = 0;
 const mainMenuScreen = 1;
@@ -178,13 +180,13 @@ function handleKeyPress(event) {
 }
 
 function validOptionPressed(keyPressed){
-  if(!isATrueFalseQuestion){
-    if((keyPressed >=49 && keyPressed <= 52) ||(keyPressed>=97 && keyPressed <= 100)){return true}
+  if(isATrueFalseQuestion){
+    if((keyPressed >=49 && keyPressed <= 50) ||(keyPressed >=97 && keyPressede <= 98)){return true}
     else{return false}
   }
   else{
-      if((keyPressed >=49 && keyPressed <= 50) ||(keyPressed >=97 && keyPressede <= 98)){return true}
-      else{return false}
+    if((keyPressed >=49 && keyPressed <= 52) ||(keyPressed>=97 && keyPressed <= 100)){return true}
+    else{return false}
   }
 }
 
@@ -194,7 +196,7 @@ function getNumPressed(keyPressed){
 }
 
 function returnToGame(){
-  activeScreen = 2;
+  activeScreen = gameplayScreen;
   answered = false;
   console.log("RETURNING TO GAME!");
   document.getElementById("questions").innerHTML = "";
@@ -219,13 +221,13 @@ function checkOptionSelected(optionSelected){
 
 function chooseGameMode(gameModeSelected){
   if(gameModeSelected == 1){
-    gameMode = 1;
+    gameMode = normalMode;
     timeElapsed = 0;
     startGame();
   }
   if(gameModeSelected == 2){
     timeElapsed = 60;
-    gameMode = 2;
+    gameMode = timeAttackMode;
     startGame();
   }
   if(gameModeSelected == 3){
@@ -308,9 +310,9 @@ function startGame() {
   document.getElementById("spaceCanvas").style.background =
   "url('images/Space_Background.png')";
   document.getElementById("score").innerHTML = "SCORE: 0"
-  if(gameMode == 1)
+  if(gameMode == normalMode)
     document.getElementById("time").innerHTML = "TIMER: 0"
-  if(gameMode == 2)
+  if(gameMode == timeAttackMode)
     document.getElementById("time").innerHTML = "TIMER: 60"
   score = 0;
   lives = 3;
@@ -527,18 +529,18 @@ function showResults(){
     showStars();
     if(lives == 0){
       document.getElementById("spaceCanvas").style.background = "url('images/Game_over.png')";
-      if(gameMode==1){
+      if(gameMode==normalMode){
         document.getElementById("timerResults").innerHTML = timeElapsed + " s"
       }
-      else{
+      if(gameMode==timeAttackMode){
         document.getElementById("timerResults").innerHTML = 60 - timeElapsed + " s"
       }
     }
-    else if(gameMode==1){ //normal mode 
+    else if(gameMode==normalMode){ 
       document.getElementById("spaceCanvas").style.background = "url('images/You_win.png')";
       document.getElementById("timerResults").innerHTML = timeElapsed + " s"
     }
-    else if(gameMode == 2){ //time attack mode
+    else if(gameMode == timeAttackMode){
       document.getElementById("spaceCanvas").style.background = "url('images/Time_up.png')";
       document.getElementById("timerResults").innerHTML = "60s"
     }
@@ -574,7 +576,7 @@ function showStars() {
 function calcRating(){
   rating = 0;
   //in regular mode, the goal is to reach 200 points, the closer you get to this goal the more stars are earned, with 5 stars requiring no lives lost
-  if(gameMode == 1){
+  if(gameMode == normalMode){
     if(score <= 50) rating = 0;
     else if(score <= 100) rating = 1;
     else if(score <= 150) rating = 2;
@@ -583,7 +585,7 @@ function calcRating(){
     else if(score == 200 && lives == 3) rating = 5;
   }
   //in time attack, no stars are received if lives run out since this is a test of skill under pressure
-  if(gameMode == 2){
+  if(gameMode == timeAttackMode){
     if(lives == 0) rating = 0;
     else if(score <= 100) rating = 1;
     else if(score <= 150) rating = 2;
@@ -628,10 +630,10 @@ function drawMuteIcon(){
 }
 
 function tick() {
-  if(gameMode == 1){
+  if(gameMode == normalMode){
     timeElapsed++;
   }
-  if(gameMode == 2){
+  if(gameMode == timeAttackMode){
     timeElapsed--;
     if(timeElapsed == 0){
       stop();
@@ -643,11 +645,11 @@ function tick() {
 
 function start() {
   if (timerID == -1) {
-    if(gameMode == 1){
+    if(gameMode == normalMode){
       timeElapsed = 0
       timerID = setInterval(tick, 1000);
     }
-    if(gameMode == 2){
+    if(gameMode == timeAttackMode){
       timeElapsed = 60
       timerID = setInterval(tick, 1000);
     }
