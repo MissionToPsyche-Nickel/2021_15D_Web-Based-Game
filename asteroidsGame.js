@@ -1,6 +1,3 @@
-//TODO: Calculate Rating
-console.log("Starting...."); //sanity check console log
-
 //GLOBAL VARIABLES:
 var asteroids = []; //2D Array of integers (representing asteroids) where "1" is a Valid_Asteroid (Gray) and "-1" is an Error_Asteroid (Red)
 var score = 0; //current score
@@ -90,8 +87,6 @@ function handleClick(event){
     if((isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2"))) //selected between 1 and 2 for a T/F 
     || (!isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2")||  (event.target.id === "ans3") || (event.target.id === "ans4") )) //selected between 1 and 4 for a normal question
     ){ 
-      console.log(event.target);
-      console.log("KEYBOARD MODE: " + activeScreen) 
       optionSelected = parseInt(event.target.id.charAt(3))
       if(!answered){
           checkOptionSelected(optionSelected)
@@ -122,20 +117,17 @@ function handleKeyPress(event) {
 
   else if(activeScreen == gameplayScreen){
       if (event.keyCode == 37 || event.keyCode == 65) {//If "Left Arrow" or "A" are pressed
-        console.log("Left/A was pressed"); //Debugging Statement
         if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left only if it is a valid move
         showRobot(); //updates robot's position
       }
       //If "Right Arrow" or "D" are pressed
       else if (event.keyCode == 39 || event.keyCode == 68) {
-        console.log("Right/D was pressed"); //Debugging Statement
         if (currentPosition <= 1) currentPosition = currentPosition + 1; //move the robot's current position one column to the right only if it is a valid move
         showRobot(); //updates robot's position
       }
 
       //If "Up Arrow" or "W" or "Spacebar" are pressed
       else if (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87) {
-        console.log("Space/Up/W was pressed"); //Debugging Statement
         calcJump(); //Calculate Game State after the robot's "jump"
         shiftAsteroidsDownAndGetNewRow(); //Shifts asteroids down and adds a new row
         if(activeScreen == gameplayScreen){
@@ -198,7 +190,6 @@ function getNumPressed(keyPressed){
 function returnToGame(){
   activeScreen = gameplayScreen;
   answered = false;
-  console.log("RETURNING TO GAME!");
   document.getElementById("questions").innerHTML = "";
   document.getElementById("spaceCanvas").style.background = "url('images/Space_Background.png')";
   showGame(); //Displays new game state
@@ -482,7 +473,6 @@ function shuffleQuestionAnswers(questionObj){
     isATrueFalseQuestion = false;
     randomIndex = Math.floor(Math.random() * Math.floor(10));
     for(var i = 1; i <= 4; i++){
-      console.log(randomIndex + i);
       if((randomIndex + i) % 4 == 0){
         correctAnswerPos = i;
         correctAnswerStr = questionObj.correctAnswer
