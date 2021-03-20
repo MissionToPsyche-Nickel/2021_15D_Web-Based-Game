@@ -21,8 +21,6 @@ var activeScreen = titleScreen;
 var answered = false;
 var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
-var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE!<br> USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA!<br>PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
-var instructionsString = "*TODO:*<br><br> Use the arrow keys or WASD to move.<br><br>You can also press space to jump.<br><br> Q/Esc returns you to main menu";
 mainMenuSound= new sound("sound/MainMenu.mp3",1)
 gameplaySound= new sound("sound/Gameplay.mp3",0.5);
 var muteStatus = false;
@@ -87,9 +85,8 @@ function handleClick(event){
     if((isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2"))) //selected between 1 and 2 for a T/F 
     || (!isATrueFalseQuestion && ((event.target.id === "ans1") ||  (event.target.id === "ans2")||  (event.target.id === "ans3") || (event.target.id === "ans4") )) //selected between 1 and 4 for a normal question
     ){ 
-      optionSelected = parseInt(event.target.id.charAt(3))
       if(!answered){
-          checkOptionSelected(optionSelected)
+          checkOptionSelected(parseInt(event.target.id.charAt(3)))
         }
     }
     else if(answered){
@@ -102,17 +99,12 @@ function handleClick(event){
 function handleKeyPress(event) {
   event.preventDefault();
 
-  if(activeScreen == titleScreen){
+  if(activeScreen == titleScreen || (event.keyCode == 81 || event.keyCode == 27)){ //if any key is pressed on title screen, or if Q/ESC are pressed
     mainMenu();
   }
 
-  else if (event.keyCode == 81 || event.keyCode == 27) {//If Q or Escape are pressed
-      mainMenu();
-    }
-
   else if(activeScreen == mainMenuScreen){
-        gameModeSelected = getNumPressed(event.keyCode)
-        chooseGameMode(gameModeSelected)
+      chooseGameMode(getNumPressed(event.keyCode))
   }
 
   else if(activeScreen == gameplayScreen){
@@ -140,12 +132,8 @@ function handleKeyPress(event) {
       if (answered && (event.keyCode == 32 || event.keyCode == 38 || event.keyCode == 87)) { //jump buttons
         returnToGame();
       }
-      var optionSelected = -1;
-      if(validOptionPressed(event.keyCode)){
-        optionSelected = getNumPressed(event.keyCode);
-        if(!answered){
-          checkOptionSelected(optionSelected)
-        }
+      if(!answered && validOptionPressed(event.keyCode)){
+          checkOptionSelected(getNumPressed(event.keyCode))
       }
 }
 
@@ -250,10 +238,7 @@ function checkForEndGame(){
 
 
 
-function showTitleScreen(){
-  document.getElementById("score").innerHTML = ""
-  document.getElementById("time").innerHTML = ""
-  clearScreen();
+function showTitleScreen(){ 
   document.getElementById("spaceCanvas").style.background =
   "url('images/Title.gif')";
 }
@@ -284,7 +269,6 @@ function studyMode(){
   document.getElementById("questions").innerHTML = "";
   document.getElementById("spaceCanvas").style.background =
   "url('images/Study_Mode_sized.png')";
-  document.getElementById("studymodeinstructions").innerHTML = studyModeDefTitle
   document.getElementById("studymodequestions").innerHTML = questionsDict[studyModeIndex].question ;
   document.getElementById("studymodeanswers").innerHTML =  questionsDict[studyModeIndex].correctAnswer;
 }
@@ -507,16 +491,12 @@ function showResults(){
     document.getElementById("time").innerHTML = ""; 
     document.getElementById("score").innerHTML = "";
     //clear the canvas of any drawings from a previous game
-    var canvas = document.getElementById("spaceCanvas");
-    var ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    canvas = document.getElementById("robotCanvas");
-    ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    clearSpaceCanvas();
+    clearRobotCanvas();
     showHearts();
+    showStars();
     drawMuteIcon();
 
-    showStars();
     if(lives == 0){
       document.getElementById("spaceCanvas").style.background = "url('images/Game_over.png')";
       if(gameMode==normalMode){
@@ -534,9 +514,7 @@ function showResults(){
       document.getElementById("spaceCanvas").style.background = "url('images/Time_up.png')";
       document.getElementById("timerResults").innerHTML = "60s"
     }
-    
     document.getElementById("scoreResults").innerHTML = score + " points"
-    //document.getElementById("questions").innerHTML = "TIMES UP!<br><br> YOUR SCORE WAS: " + score + "!<br><br> LIVES REMAINING: " + lives +"!<br><br> Try to beat your score by playing again!<br><br>Press Q/ESC to return to the main menu" 
 }
 
 function showStars() {
@@ -599,7 +577,6 @@ function clearRobotCanvas(){
 }
 
 function clearScreen(){
-  document.getElementById("studymodeinstructions").innerHTML = "";
   document.getElementById("studymodequestions").innerHTML = "";
   document.getElementById("studymodeanswers").innerHTML = "";
   document.getElementById("questions").innerHTML = "";
@@ -637,12 +614,11 @@ function start() {
   if (timerID == -1) {
     if(gameMode == normalMode){
       timeElapsed = 0
-      timerID = setInterval(tick, 1000);
     }
     if(gameMode == timeAttackMode){
       timeElapsed = 60
-      timerID = setInterval(tick, 1000);
     }
+    timerID = setInterval(tick, 1000);
   }
 }
 
