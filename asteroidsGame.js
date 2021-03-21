@@ -21,6 +21,7 @@ var activeScreen = titleScreen;
 var answered = false;
 var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
+var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE!<br> USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA!<br>PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
 mainMenuSound= new sound("sound/MainMenu.mp3",1)
 gameplaySound= new sound("sound/Gameplay.mp3",0.5);
 var muteStatus = false;
@@ -282,6 +283,7 @@ function studyMode(){
   document.getElementById("questions").innerHTML = "";
   document.getElementById("spaceCanvas").style.background =
   "url('images/Study_Mode_sized.png')";
+  document.getElementById("studymodeinstructions").innerHTML = studyModeDefTitle
   document.getElementById("studymodequestions").innerHTML = questionsDict[studyModeIndex].question ;
   document.getElementById("studymodeanswers").innerHTML =  questionsDict[studyModeIndex].correctAnswer;
 }
@@ -590,6 +592,7 @@ function clearRobotCanvas(){
 }
 
 function clearScreen(){
+  document.getElementById("studymodeinstructions").innerHTML = "";
   document.getElementById("studymodequestions").innerHTML = "";
   document.getElementById("studymodeanswers").innerHTML = "";
   document.getElementById("questions").innerHTML = "";
