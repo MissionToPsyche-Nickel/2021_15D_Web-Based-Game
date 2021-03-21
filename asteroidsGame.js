@@ -34,6 +34,7 @@ showTitleScreen();
 //Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
 document.body.addEventListener('click', handleClick); 
+window.addEventListener('resize',resizeWindow)
 document.getElementById("gameMode1").addEventListener("click", handleClick);
 document.getElementById("gameMode2").addEventListener("click", handleClick);
 document.getElementById("gameMode3").addEventListener("click", handleClick);
@@ -43,7 +44,16 @@ document.getElementById("ans2").addEventListener("click", handleClick);
 document.getElementById("ans3").addEventListener("click", handleClick);
 document.getElementById("ans4").addEventListener("click", handleClick);
 
-
+function resizeWindow(){
+  console.log("SEFES");
+  const canvas = document.getElementById("baseCanvas"); //canvas variable
+  var ctx = canvas.getContext("2d"); //ctx is used to access the drawImage() functionality of the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
+  document.getElementById("baseCanvas").style.background =
+  "url('images/Space_Base.png')";
+  ctx.canvas.width  = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
+}
 function toggleMute(){
   //first we need to find out which music is playing or needs to be played
   //this can be done by finding out which screen we are on when the mute icon is pressed
@@ -111,11 +121,13 @@ function handleKeyPress(event) {
       if (event.keyCode == 37 || event.keyCode == 65) {//If "Left Arrow" or "A" are pressed
         if (currentPosition >= 1) currentPosition = currentPosition - 1; //move the robot's current position one column to the left only if it is a valid move
         showRobot(); //updates robot's position
+        showGame(); //updates robot's position
       }
       //If "Right Arrow" or "D" are pressed
       else if (event.keyCode == 39 || event.keyCode == 68) {
         if (currentPosition <= 1) currentPosition = currentPosition + 1; //move the robot's current position one column to the right only if it is a valid move
         showRobot(); //updates robot's position
+        showGame(); //updates robot's position
       }
 
       //If "Up Arrow" or "W" or "Spacebar" are pressed
@@ -375,12 +387,35 @@ function showGame() {
       let y = 20 + i * 160; //Y Coordinate to draw the asteroid, Start 20 below the top of the screen, and each row is 160 below the last
 
       //Drawing the incoming asteroids (rows 0, 1, and 2 )
-      if (i != 3) {
+      if (i <= 1) {
         if (asteroids[i][j] === -1) {
           //-1 means Error Asteroid
           var asteroidToDraw = document.getElementById("Error Asteroid");
         } else {
           //Non -1 Value means Valid Asteroid
+          var asteroidToDraw = document.getElementById("Valid Asteroid");
+        }
+        //The drawImage() method works as following:
+        //Note that here, x and y change each iteration to display the 2D grid
+        //ctx.drawImage(image to display, x axis positon, y axis position, image width, image height)
+        ctx.drawImage(asteroidToDraw, x, y, 100, 100);
+      }
+
+      else if(i == 2){
+        if (asteroids[i][j] === -1 && currentPosition  != j) {
+          //-1 means Error Asteroid
+          var asteroidToDraw = document.getElementById("Error Asteroid");
+        } 
+        else if (asteroids[i][j] === -1 && currentPosition === j){
+          //Non -1 Value means Valid Asteroid
+          var asteroidToDraw = document.getElementById("Error Glowing Asteroid");
+        }
+        else if (asteroids[i][j] != -1 && currentPosition == j){
+          //Non -1 Value means Valid Asteroid
+          var asteroidToDraw = document.getElementById("Valid Glowing Asteroid");
+        }
+
+        else if(asteroids[i][j] != -1 && currentPosition != j){
           var asteroidToDraw = document.getElementById("Valid Asteroid");
         }
         //The drawImage() method works as following:
@@ -455,7 +490,7 @@ function prompt_question(){
 }
 
 function getQuestionString(){
-  questionIndex = Math.floor(Math.random() * Math.floor(26));
+  questionIndex = Math.floor(Math.random() * Math.floor(27));
   return shuffleQuestionAnswers(questionsDict[questionIndex])
 }
 
