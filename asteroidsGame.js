@@ -27,6 +27,12 @@ var muteStatus = false;
 var questionsDict = generateQuestionDict();
 
 
+
+var width=678;
+var height=500;
+self.moveTo((screen.availwidth-width)/2,(screen.availheight-height)/2);
+self.resizeTo(width,height)
+
 //Starts the game
 showTitleScreen();
 drawMuteIcon();
@@ -239,6 +245,13 @@ function checkForEndGame(){
 
 
 function showTitleScreen(){ 
+  const canvas = document.getElementById("baseCanvas"); //canvas variable
+  var ctx = canvas.getContext("2d"); //ctx is used to access the drawImage() functionality of the canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
+  document.getElementById("baseCanvas").style.background =
+  "url('images/Space_Base.png')";
+  ctx.canvas.width  = window.innerWidth;
+  ctx.canvas.height = window.innerHeight;
   document.getElementById("spaceCanvas").style.background =
   "url('images/Title.gif')";
 }
@@ -355,7 +368,7 @@ function showGame() {
   showRobot(); //display the robot
   const canvas = document.getElementById("spaceCanvas"); //canvas variable
   var ctx = canvas.getContext("2d"); //ctx is used to access the drawImage() functionality of the canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the robot canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
   showHearts();
   drawMuteIcon();
   //iterate through the 2D Array

@@ -14,9 +14,10 @@
   <body style="background-color:black;">
 
 <!-- onclick="startGame()" -->
-
+    <canvas id="baseCanvas" width="1152.6" height="648.6"></canvas>
     <canvas id="spaceCanvas" width="1152.6" height="648.6"></canvas>
     <canvas id="robotCanvas" width="1152.6" height="648.6"></canvas>
+    
     <button 
     type="button" 
     id="gameMode1"
@@ -371,6 +372,13 @@ style="
       src="images/Done_Valid_Asteroid.png"
       alt="faded gray heart"
     />
+    <script Language="JavaScript">
+      var width=1000;
+      var height=1000;
+      self.moveTo((screen.availwidth-width)/2,(screen.availheight-height)/2);
+      self.resizeTo(width,height);
+      </script>
     <script type="text/javascript" src="asteroidsGame.js"></script>
   </body>
+
 </html>
