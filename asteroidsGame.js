@@ -21,22 +21,15 @@ var activeScreen = titleScreen;
 var answered = false;
 var isATrueFalseQuestion = false;
 var studyModeIndex = 0;
-var studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE!<br> USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA!<br>PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
-mainMenuSound= new sound("sound/MainMenu.mp3",1)
-gameplaySound= new sound("sound/Gameplay.mp3",0.5);
+const studyModeDefTitle = "<br><br>WELCOME TO STUDY MODE!<br> USE THE ARROW KEYS TO CYCLE BETWEEN TRIVIA!<br>PRESS Q/ESCAPE TO RETURN TO THE MAIN MENU!<br><br>";
+var mainMenuSound= new sound("sound/MainMenu.mp3",1)
+var gameplaySound= new sound("sound/Gameplay.mp3",0.5);
 var muteStatus = false;
 var questionsDict = generateQuestionDict();
 
-
-
-var width=678;
-var height=500;
-self.moveTo((screen.availwidth-width)/2,(screen.availheight-height)/2);
-self.resizeTo(width,height)
-
 //Starts the game
 showTitleScreen();
-drawMuteIcon();
+
 
 //Create a Keyboard Listener to get user input
 document.addEventListener("keydown", handleKeyPress);
@@ -246,6 +239,7 @@ function checkForEndGame(){
 
 
 function showTitleScreen(){ 
+  
   const canvas = document.getElementById("baseCanvas"); //canvas variable
   var ctx = canvas.getContext("2d"); //ctx is used to access the drawImage() functionality of the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
@@ -255,6 +249,7 @@ function showTitleScreen(){
   ctx.canvas.height = window.innerHeight;
   document.getElementById("spaceCanvas").style.background =
   "url('images/Title.gif')";
+  drawMuteIcon();
 }
 
 function mainMenu(){
