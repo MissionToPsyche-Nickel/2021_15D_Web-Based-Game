@@ -37,3 +37,10 @@ The motivation behind our overall project was to create a fun and informational 
 
 ## Build Steps
 After cloning the repository, open index.html in your favorite web browser!
+
+## Development Notes
+- Coded primarily in VSCode using the Live Server Extension 
+- Coded using a mix of HTML and Javascript
+- No External libraries were used in this project
+- All image assets can be found in the images directory
+- All sound assets can be found in the sound directory
