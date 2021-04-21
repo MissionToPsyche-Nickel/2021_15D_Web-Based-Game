@@ -20,10 +20,10 @@ The motivation behind our overall project was to create a fun and informational 
 ![Screen Shot 2021-04-20 at 10 21 14 PM](https://user-images.githubusercontent.com/46613112/115500729-bbe90680-a226-11eb-9f91-78e48e736408.png)
 
 
-1. Normal: Manuever the character through a sea of incoming meteroids. Gray meteroids are safe to progress, flaiming meteroids are dangerous! Choosing a flaming meteroid prompts a question. Answering incorrectly penalizes the player with a life lost. Answering correctly allows them to continue at no cost! Reach 200 points to complete the game!
+1. Normal: Manuever the character through a sea of incoming meteroids. Gray meteroids are safe to progress, flaiming meteroids are dangerous! Choosing a flaming meteroid prompts a question. Answering incorrectly penalizes the player with a life lost. Answering correctly allows them to continue at no cost. Reach 200 points to complete the game!
 2. Time Attack: Try to beat your high score with only 60 seconds! 
 3. Study Mode: Cycle through the question pool to learn about the Psyche mission and protect yourself from losing lives!
-4. Instructions: Access a quick infromational graphic on how to play!
+4. Instructions: Access a quick informational graphic on how to play!
 
 
 
@@ -39,8 +39,8 @@ The motivation behind our overall project was to create a fun and informational 
 After cloning the repository, open index.html in your favorite web browser!
 
 ## Development Notes
-- Coded primarily in VSCode using the Live Server Extension 
-- Coded using a mix of HTML and Javascript
-- No External libraries were used in this project
-- All image assets can be found in the images directory
-- All sound assets can be found in the sound directory
+- Coded primarily in VSCode using the Live Server Extension.
+- Uses a mix of HTML and Javascript.
+- No external libraries were used in this project.
+- All image assets can be found in the images directory.
+- All sound assets can be found in the sound directory.
