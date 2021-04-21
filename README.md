@@ -35,3 +35,5 @@ The motivation behind our overall project was to create a fun and informational 
 ![Screen Shot 2021-04-20 at 10 27 03 PM](https://user-images.githubusercontent.com/46613112/115501153-8abd0600-a227-11eb-991f-440d86d0f6bb.png)
 
 
+## Build Steps
+After cloning the repository, open index.html in your favorite web browser!
