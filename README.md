@@ -1,6 +1,6 @@
 # Jump to Psyche
 
-## Team Members
+## NASA Psyche Web-Based Game 15D [Nickel Class]
 
 - Assad Yousuf
 - Danial Yunus
