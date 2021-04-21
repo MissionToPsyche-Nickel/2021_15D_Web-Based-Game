@@ -1,6 +1,6 @@
 # Jump to Psyche
 
-##Team Members
+## Team Members
 
 - Assad Yousuf
 - Danial Yunus
