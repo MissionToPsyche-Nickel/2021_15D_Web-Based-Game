@@ -14,7 +14,7 @@
 Players will navigate the character through a sea of incoming meteoroids while attempting to avoid dangerous meteors. When players land on a flaming meteor, a trivia question relating to the Psyche mission is presented and the player must answer correctly to proceed without losing a life. The game also features a study mode that cycles through the trivia questions and encourages players to learn!
 
 ## Goal of this Project
-The motivation behind our overall project was to create a fun and informational game that could be enjoyed by all ages. Although we made the game kid friendly, we incorporated many elements to keep things engaging for adults. The motivation behind the gameplay was inspired by games like Piano Tiles, which feature similar gameplay and are enjoyed by all age groups. 
+The motivation behind our overall project was to create a fun and informational game that could be enjoyed by all ages. Although we made the game kid friendly, we incorporated many elements to keep things engaging for adults. 
 
 ## Game Modes
 ![Screen Shot 2021-04-20 at 10 21 14 PM](https://user-images.githubusercontent.com/46613112/115500729-bbe90680-a226-11eb-9f91-78e48e736408.png)
