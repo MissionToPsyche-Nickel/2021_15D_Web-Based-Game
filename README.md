@@ -2,6 +2,7 @@
 
 ## NASA Psyche Web-Based Game 15D [Nickel Class]
 
+- Arizona State University
 - Assad Yousuf
 - Danial Yunus
 - Sophia Shovkovy
