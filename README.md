@@ -10,7 +10,7 @@
 
 ![Screen Shot 2021-04-20 at 10 27 54 PM](https://user-images.githubusercontent.com/46613112/115501236-a9230180-a227-11eb-9dff-821808e33457.png)
 
-## Game Description
+## Project Description
 Players will navigate the character through a sea of incoming meteoroids while attempting to avoid dangerous meteors. When players land on a flaming meteor, a trivia question relating to the Psyche mission is presented and the player must answer correctly to proceed without losing a life. The game also features a study mode that cycles through the trivia questions and encourages players to learn!
 
 ## Goal of this Project
